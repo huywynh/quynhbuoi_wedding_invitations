@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp Cưới - Quỳnh & Hoa Bưởi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Audio Player -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicToggle" class="music-toggle">
+        <span class="music-icon">🎵</span>
+    </button>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-text fade-in">
+                <p class="save-date">Save The Date</p>
+                <h1 class="couple-names">
+                    <span class="groom-name">Quỳnh</span>
+                    <span class="ampersand">&</span>
+                    <span class="bride-name">Hoa Bưởi</span>
+                </h1>
+                <p class="wedding-date">25 • 01 • 2026</p>
+                <div class="scroll-indicator">
+                    <span>&#8595;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Couple Section -->
+    <section class="couple-section">
+        <div class="container">
+            <h2 class="section-title">Chú Rể & Cô Dâu</h2>
+            <div class="couple-info">
+                <div class="person groom">
+                    <div class="person-image">
+                        <img src="https://via.placeholder.com/300x400/D4AF37/FFFFFF?text=Chu+Re" alt="Chú rể">
+                    </div>
+                    <h3>Phan Huy Quỳnh</h3>
+                    <p class="person-title">Chú Rể</p>
+                </div>
+                <div class="heart-divider">
+                    <span>❤️</span>
+                </div>
+                <div class="person bride">
+                    <div class="person-image">
+                        <img src="https://via.placeholder.com/300x400/D4AF37/FFFFFF?text=Co+Dau" alt="Cô dâu">
+                    </div>
+                    <h3>Trương Thị Hoa Bưởi</h3>
+                    <p class="person-title">Cô Dâu</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section">
+        <div class="container">
+            <h2 class="section-title">Đếm Ngược Đến Ngày Trọng Đại</h2>
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-value" id="days">00</span>
+                    <span class="countdown-label">Ngày</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="hours">00</span>
+                    <span class="countdown-label">Giờ</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="minutes">00</span>
+                    <span class="countdown-label">Phút</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="seconds">00</span>
+                    <span class="countdown-label">Giây</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Details Section -->
+    <section class="event-section">
+        <div class="container">
+            <h2 class="section-title">Thông Tin Đám Cưới</h2>
+            <div class="event-details">
+                <div class="event-item">
+                    <div class="event-icon">📅</div>
+                    <h3>Ngày Giờ</h3>
+                    <p>11:00 Sáng</p>
+                    <p>Thứ Bảy, 25 tháng 01 năm 2026</p>
+                </div>
+                <div class="event-item">
+                    <div class="event-icon">📍</div>
+                    <h3>Địa Điểm</h3>
+                    <p><strong>Nhà Hàng Tiệc Cưới Kim Cương</strong></p>
+                    <p>(Sảnh Cát Tường)</p>
+                    <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="map-button">Xem Bản Đồ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Maps Section -->
+    <section class="map-section">
+        <div class="container">
+            <h2 class="section-title">Bản Đồ Địa Điểm</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.6345!2d106.6345!3d10.7623!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDQ1JzQ0LjMiTiAxMDbCsDM4JzA0LjIiRQ!5e0!3m2!1sen!2s!4v1234567890" 
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">Khoảnh Khắc Của Chúng Tôi</h2>
+            <div class="gallery-grid" id="gallery">
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+1" alt="Gallery 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+2" alt="Gallery 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+3" alt="Gallery 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+4" alt="Gallery 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+5" alt="Gallery 5">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://via.placeholder.com/400x400/FFB6C1/FFFFFF?text=Hinh+6" alt="Gallery 6">
+                </div>
+            </div>
+            <p class="gallery-note">*Hình ảnh mẫu - Thay thế bằng ảnh thật của bạn</p>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section class="rsvp-section">
+        <div class="container">
+            <h2 class="section-title">Xác Nhận Tham Dự</h2>
+            <p class="rsvp-subtitle">Rất hân hạnh được đón tiếp quý khách</p>
+            <form id="rsvpForm" class="rsvp-form">
+                <div class="form-group">
+                    <input type="text" id="name" name="name" placeholder="Họ và tên *" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" placeholder="Số điện thoại *" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email (không bắt buộc)">
+                </div>
+                <div class="form-group">
+                    <select id="attendance" name="attendance" required>
+                        <option value="">Bạn có thể tham dự? *</option>
+                        <option value="yes">Có, tôi sẽ tham dự</option>
+                        <option value="no">Rất tiếc, tôi không thể tham dự</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="guests" name="guests" placeholder="Số lượng khách đi cùng" min="0" max="10">
+                </div>
+                <div class="form-group">
+                    <textarea id="message" name="message" placeholder="Lời chúc của bạn..." rows="4"></textarea>
+                </div>
+                <button type="submit" class="submit-button">Gửi Xác Nhận</button>
+            </form>
+            <div id="formMessage" class="form-message"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="thank-you">Cảm ơn bạn đã ghé thăm!</p>
+            <p class="couple-signature">Quỳnh & Hoa Bưởi</p>
+            <p class="footer-date">25.01.2026</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
