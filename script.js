@@ -212,5 +212,45 @@ sections.forEach(section => {
 document.querySelector('.hero').style.opacity = '1';
 document.querySelector('.hero').style.transform = 'translateY(0)';
 
+// Hero slider (3 images in `pic_hero/hero1.jpg`..`hero3.jpg`)
+(function initHeroSlider(){
+    const slides = Array.from(document.querySelectorAll('.hero-slider .slide'));
+    if (!slides.length) return;
+
+    let current = 0;
+    slides.forEach((s,i)=> { if(i===0) s.classList.add('active'); });
+
+    const show = (index) => {
+        slides.forEach((s, i) => {
+            s.classList.toggle('active', i === index);
+        });
+        current = index;
+    };
+
+    const next = () => show((current + 1) % slides.length);
+    const prev = () => show((current - 1 + slides.length) % slides.length);
+
+    // autoplay every 4s
+    let timer = setInterval(next, 4000);
+
+    // buttons
+    const btnNext = document.querySelector('.slider-btn.next');
+    const btnPrev = document.querySelector('.slider-btn.prev');
+    if (btnNext) btnNext.addEventListener('click', () => { next(); resetTimer(); });
+    if (btnPrev) btnPrev.addEventListener('click', () => { prev(); resetTimer(); });
+
+    // pause on hover
+    const heroEl = document.querySelector('.hero');
+    if (heroEl) {
+        heroEl.addEventListener('mouseenter', () => clearInterval(timer));
+        heroEl.addEventListener('mouseleave', () => { timer = setInterval(next, 2000); });
+    }
+
+    function resetTimer(){
+        clearInterval(timer);
+        timer = setInterval(next, 2000);
+    }
+})();
+
 console.log('🎉 Wedding invitation loaded successfully!');
 console.log('💝 Made with love for Quỳnh & Hoa Bưởi');
