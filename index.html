@@ -13,6 +13,11 @@
     <header class="site-header">
         <div class="container header-inner">
             <div class="logo">Q <span class="heart">❤</span> B</div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <nav class="main-nav">
                 <a href="#couple">Cặp đôi</a>
                 <a href="#event">Sự kiện</a>
@@ -22,10 +27,8 @@
             </nav>
         </div>
     </header>
-    <!-- Audio Player -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <!-- Audio Player (playlist managed by script.js) -->
+    <audio id="bgMusic" preload="none"></audio>
     <button id="musicToggle" class="music-toggle">
         <span class="music-icon">🎵</span>
     </button>

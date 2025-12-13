@@ -1,3 +1,80 @@
+// Heart Sparkle Effect
+function createHeartSparkles() {
+    const heartDivider = document.querySelector('.heart-divider span');
+    if (!heartDivider) return;
+
+    // Create sparkle particles
+    for (let i = 0; i < 3; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.className = 'heart-sparkle';
+        sparkle.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, var(--primary-color), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle${i} 3s ease-in-out infinite;
+            animation-delay: ${i * 0.5}s;
+        `;
+        heartDivider.appendChild(sparkle);
+    }
+
+    // Add sparkle animations dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes sparkle0 {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) translate(-20px, -20px) scale(0); }
+            50% { opacity: 1; transform: translate(-50%, -50%) translate(-20px, -20px) scale(1); }
+        }
+        @keyframes sparkle1 {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) translate(20px, -20px) scale(0); }
+            50% { opacity: 1; transform: translate(-50%, -50%) translate(20px, -20px) scale(1); }
+        }
+        @keyframes sparkle2 {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) translate(0, -28px) scale(0); }
+            50% { opacity: 1; transform: translate(-50%, -50%) translate(0, -28px) scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize heart sparkles after DOM loaded
+document.addEventListener('DOMContentLoaded', createHeartSparkles);
+
+// Mobile Menu Toggle
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+const mainNav = document.querySelector('.main-nav');
+const navLinks = document.querySelectorAll('.main-nav a');
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        mainNav.classList.toggle('active');
+        document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu when clicking on a link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenuToggle.classList.remove('active');
+            mainNav.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!mainNav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            mobileMenuToggle.classList.remove('active');
+            mainNav.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
 // Countdown Timer
 function updateCountdown() {
     const weddingDate = new Date('2026-01-25T11:00:00').getTime();
@@ -23,35 +100,154 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// Music Player
+// Music Player (playlist from /music)
 const music = document.getElementById('bgMusic');
 const musicToggle = document.getElementById('musicToggle');
 let isPlaying = false;
+let playlist = [];
+let currentTrack = 0;
+let playlistInitialized = false;
 
-// Auto play music (with user interaction required by browsers)
-document.addEventListener('click', function initMusic() {
-    if (!isPlaying) {
-        music.play().then(() => {
-            isPlaying = true;
-            musicToggle.classList.remove('paused');
-        }).catch(() => {
-            console.log('Autoplay prevented');
-        });
+// Danh sách file nhạc mặc định
+// Bạn có thể thêm file nhạc vào thư mục /music với tên: song1.mp3, song2.mp3, ...
+function getDefaultPlaylist() {
+    const files = [];
+    // Thử các tên file phổ biến
+    for (let i = 1; i <= 5; i++) {
+        files.push(`music/song${i}.mp3`);
+        files.push(`music/track${i}.mp3`);
+        files.push(`music/${i}.mp3`);
     }
-    document.removeEventListener('click', initMusic);
-}, { once: true });
+    return files;
+}
 
-musicToggle.addEventListener('click', function() {
+// Load playlist từ manifest.json hoặc dùng danh sách mặc định
+async function loadPlaylist() {
+    try {
+        const res = await fetch('music/manifest.json');
+        if (res.ok) {
+            const list = await res.json();
+            if (Array.isArray(list) && list.length) {
+                playlist = list.map(p => p.startsWith('http') || p.startsWith('/') ? p : `music/${p}`);
+                console.log('✅ Loaded playlist from manifest.json:', playlist.length, 'tracks');
+                return;
+            }
+        }
+    } catch (e) {
+        console.log('ℹ️ No manifest.json found, using default playlist');
+    }
+
+    // Nếu không có manifest, dùng danh sách mặc định
+    playlist = getDefaultPlaylist();
+    console.log('ℹ️ Using default playlist:', playlist.length, 'tracks');
+}
+
+function playTrack(index) {
+    if (!playlist.length) {
+        console.log('⚠️ No playlist available');
+        return;
+    }
+
+    currentTrack = index % playlist.length;
+    const trackUrl = playlist[currentTrack];
+
+    console.log(`🎵 Playing track ${currentTrack + 1}/${playlist.length}: ${trackUrl}`);
+
+    music.src = trackUrl;
+    music.load();
+
+    music.play().then(() => {
+        isPlaying = true;
+        musicToggle.classList.remove('paused');
+        musicToggle.querySelector('.music-icon').textContent = '🎵';
+        console.log('✅ Playback started');
+    }).catch((error) => {
+        console.log('⚠️ Playback failed:', error.message);
+        // Thử track tiếp theo nếu track hiện tại không load được
+        if (currentTrack < playlist.length - 1) {
+            console.log('Trying next track...');
+            setTimeout(() => playTrack(currentTrack + 1), 500);
+        }
+    });
+}
+
+function nextTrack() {
+    if (!playlist.length) return;
+    currentTrack = (currentTrack + 1) % playlist.length;
+    playTrack(currentTrack);
+}
+
+function prevTrack() {
+    if (!playlist.length) return;
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    playTrack(currentTrack);
+}
+
+// Khi track kết thúc, tự động phát track tiếp theo
+music.addEventListener('ended', () => {
+    console.log('Track ended, playing next...');
+    nextTrack();
+});
+
+// Xử lý lỗi khi load track
+music.addEventListener('error', (e) => {
+    console.log('❌ Error loading track:', music.src);
+    // Tự động chuyển sang track tiếp theo
+    setTimeout(() => nextTrack(), 500);
+});
+
+// Khởi tạo và phát nhạc khi người dùng tương tác lần đầu
+let musicInitialized = false;
+
+async function initMusic() {
+    if (musicInitialized) return;
+    musicInitialized = true;
+
+    console.log('🎵 Initializing music player...');
+    await loadPlaylist();
+
+    if (playlist.length > 0) {
+        playTrack(0);
+    } else {
+        console.log('⚠️ No music files found. Please add music files to /music folder');
+    }
+}
+
+// Tự động phát nhạc khi người dùng click vào bất kỳ đâu trên trang
+document.addEventListener('click', initMusic, { once: true });
+
+// Hoặc khi scroll
+document.addEventListener('scroll', initMusic, { once: true });
+
+// Hoặc khi di chuyển chuột
+document.addEventListener('mousemove', initMusic, { once: true });
+
+// Toggle play/pause button
+musicToggle.addEventListener('click', async function(e) {
+    e.stopPropagation(); // Ngăn trigger init music event
+
+    // Nếu chưa khởi tạo, khởi tạo trước
+    if (!musicInitialized) {
+        await initMusic();
+        return;
+    }
+
     if (isPlaying) {
         music.pause();
         musicToggle.classList.add('paused');
         musicToggle.querySelector('.music-icon').textContent = '🔇';
+        isPlaying = false;
+        console.log('⏸️ Music paused');
     } else {
-        music.play();
-        musicToggle.classList.remove('paused');
-        musicToggle.querySelector('.music-icon').textContent = '🎵';
+        music.play().then(() => {
+            musicToggle.classList.remove('paused');
+            musicToggle.querySelector('.music-icon').textContent = '🎵';
+            isPlaying = true;
+            console.log('▶️ Music resumed');
+        }).catch(() => {
+            console.log('⚠️ Play prevented');
+        });
     }
-    isPlaying = !isPlaying;
 });
 
 // Scroll animations
