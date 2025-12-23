@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Ảnh - Huy Quỳnh & Hoa Bưởi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .gallery-page {
+            padding: 100px 0 60px;
+            background: linear-gradient(135deg, #fdfcfb 0%, #f8f5f0 100%);
+            min-height: 100vh;
+        }
+
+        .gallery-page .section-title {
+            margin-bottom: 20px;
+        }
+
+        .gallery-page .gallery-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            font-style: italic;
+        }
+
+        .gallery-full-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-full-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-full-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-full-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-full-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 0 auto 40px;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+            line-height: 1;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 20px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-full-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .gallery-page {
+                padding: 80px 0 40px;
+            }
+
+            .lightbox-prev,
+            .lightbox-next {
+                font-size: 30px;
+                padding: 10px;
+            }
+
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="logo">Q <span class="heart">❤</span> B</div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="main-nav">
+                <a href="index.html#couple">Cặp đôi</a>
+                <a href="index.html#event">Sự kiện</a>
+                <a href="index.html#gallery">Album hình</a>
+                <a href="index.html#rsvp">Sổ lưu bút</a>
+                <a href="index.html#map">Mừng cưới</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="gallery-page">
+        <div class="container">
+            <h2 class="section-title">Album Ảnh Cưới</h2>
+            <p class="gallery-subtitle">Những khoảnh khắc đáng nhớ của chúng tôi</p>
+
+            <div class="button-container">
+                <a href="index.html#gallery" class="back-button">← Quay lại trang chủ</a>
+            </div>
+
+            <div class="gallery-full-grid" id="galleryFullGrid">
+                <div class="gallery-full-item" data-index="0">
+                    <img src="gallery/DSC_0172.JPG" alt="Wedding Photo 1">
+                </div>
+                <div class="gallery-full-item" data-index="1">
+                    <img src="gallery/DSC_0195.JPG" alt="Wedding Photo 2">
+                </div>
+                <div class="gallery-full-item" data-index="2">
+                    <img src="gallery/DSC_0208.JPG" alt="Wedding Photo 3">
+                </div>
+                <div class="gallery-full-item" data-index="3">
+                    <img src="gallery/DSC_0218.JPG" alt="Wedding Photo 4">
+                </div>
+                <div class="gallery-full-item" data-index="4">
+                    <img src="gallery/DSC_0219.JPG" alt="Wedding Photo 5">
+                </div>
+                <div class="gallery-full-item" data-index="5">
+                    <img src="gallery/DSC_0232.JPG" alt="Wedding Photo 6">
+                </div>
+                <div class="gallery-full-item" data-index="6">
+                    <img src="gallery/DSC_0238.JPG" alt="Wedding Photo 7">
+                </div>
+                <div class="gallery-full-item" data-index="7">
+                    <img src="gallery/DSC_0252.JPG" alt="Wedding Photo 8">
+                </div>
+                <div class="gallery-full-item" data-index="8">
+                    <img src="gallery/DSC_0274.JPG" alt="Wedding Photo 9">
+                </div>
+                <div class="gallery-full-item" data-index="9">
+                    <img src="gallery/DSC_0277.JPG" alt="Wedding Photo 10">
+                </div>
+                <div class="gallery-full-item" data-index="10">
+                    <img src="gallery/DSC_0284.JPG" alt="Wedding Photo 11">
+                </div>
+                <div class="gallery-full-item" data-index="11">
+                    <img src="gallery/DSC_0285.JPG" alt="Wedding Photo 12">
+                </div>
+                <div class="gallery-full-item" data-index="12">
+                    <img src="gallery/DSC_0307.JPG" alt="Wedding Photo 13">
+                </div>
+                <div class="gallery-full-item" data-index="13">
+                    <img src="gallery/DSC_0324.JPG" alt="Wedding Photo 14">
+                </div>
+                <div class="gallery-full-item" data-index="14">
+                    <img src="gallery/DSC_0368.JPG" alt="Wedding Photo 15">
+                </div>
+                <div class="gallery-full-item" data-index="15">
+                    <img src="gallery/DSC_0388.JPG" alt="Wedding Photo 16">
+                </div>
+                <div class="gallery-full-item" data-index="16">
+                    <img src="gallery/DSC_0436.JPG" alt="Wedding Photo 17">
+                </div>
+                <div class="gallery-full-item" data-index="17">
+                    <img src="gallery/DSC_0448.JPG" alt="Wedding Photo 18">
+                </div>
+                <div class="gallery-full-item" data-index="18">
+                    <img src="gallery/DSC_0450.JPG" alt="Wedding Photo 19">
+                </div>
+                <div class="gallery-full-item" data-index="19">
+                    <img src="gallery/DSC_0467.JPG" alt="Wedding Photo 20">
+                </div>
+                <div class="gallery-full-item" data-index="20">
+                    <img src="gallery/DSC_0478.JPG" alt="Wedding Photo 21">
+                </div>
+                <div class="gallery-full-item" data-index="21">
+                    <img src="gallery/DSC_0487.JPG" alt="Wedding Photo 22">
+                </div>
+                <div class="gallery-full-item" data-index="22">
+                    <img src="gallery/DSC_0514.JPG" alt="Wedding Photo 23">
+                </div>
+                <div class="gallery-full-item" data-index="23">
+                    <img src="gallery/DSC_0541.JPG" alt="Wedding Photo 24">
+                </div>
+                <div class="gallery-full-item" data-index="24">
+                    <img src="gallery/DSC_0554.JPG" alt="Wedding Photo 25">
+                </div>
+                <div class="gallery-full-item" data-index="25">
+                    <img src="gallery/DSC_0573.JPG" alt="Wedding Photo 26">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-prev" onclick="changeLightboxImage(-1)">‹</button>
+        <img id="lightboxImg" src="" alt="Lightbox Image">
+        <button class="lightbox-next" onclick="changeLightboxImage(1)">›</button>
+    </div>
+
+    <script>
+        let currentImageIndex = 0;
+        const images = [
+            'gallery/DSC_0172.JPG',
+            'gallery/DSC_0195.JPG',
+            'gallery/DSC_0208.JPG',
+            'gallery/DSC_0218.JPG',
+            'gallery/DSC_0219.JPG',
+            'gallery/DSC_0232.JPG',
+            'gallery/DSC_0238.JPG',
+            'gallery/DSC_0252.JPG',
+            'gallery/DSC_0274.JPG',
+            'gallery/DSC_0277.JPG',
+            'gallery/DSC_0284.JPG',
+            'gallery/DSC_0285.JPG',
+            'gallery/DSC_0307.JPG',
+            'gallery/DSC_0324.JPG',
+            'gallery/DSC_0368.JPG',
+            'gallery/DSC_0388.JPG',
+            'gallery/DSC_0436.JPG',
+            'gallery/DSC_0448.JPG',
+            'gallery/DSC_0450.JPG',
+            'gallery/DSC_0467.JPG',
+            'gallery/DSC_0478.JPG',
+            'gallery/DSC_0487.JPG',
+            'gallery/DSC_0514.JPG',
+            'gallery/DSC_0541.JPG',
+            'gallery/DSC_0554.JPG',
+            'gallery/DSC_0573.JPG'
+        ];
+
+        // Open lightbox
+        document.querySelectorAll('.gallery-full-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentImageIndex = index;
+                openLightbox(images[index]);
+            });
+        });
+
+        function openLightbox(src) {
+            document.getElementById('lightbox').classList.add('active');
+            document.getElementById('lightboxImg').src = src;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) {
+                currentImageIndex = images.length - 1;
+            } else if (currentImageIndex >= images.length) {
+                currentImageIndex = 0;
+            }
+            document.getElementById('lightboxImg').src = images[currentImageIndex];
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeLightboxImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeLightboxImage(1);
+            }
+        });
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.main-nav').classList.toggle('active');
+        });
+
+        // Falling Hearts Animation
+        function createFallingHeart() {
+            const container = document.getElementById('fallingHeartsContainer');
+            if (!container) return;
+
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.innerHTML = '♥';
+
+            const sizes = ['small', 'medium', 'large'];
+            const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+            heart.classList.add(randomSize);
+
+            const colors = ['pink', 'gold', 'rose', 'light-pink'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            heart.classList.add(randomColor);
+
+            const randomLeft = Math.random() * 100;
+            heart.style.left = randomLeft + '%';
+
+            const randomDrift = (Math.random() - 0.5) * 100;
+            heart.style.setProperty('--drift', randomDrift + 'px');
+
+            const randomDuration = 8 + Math.random() * 6;
+            heart.style.animationDuration = randomDuration + 's';
+
+            const randomDelay = Math.random() * 3;
+            heart.style.animationDelay = randomDelay + 's';
+
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, (randomDuration + randomDelay) * 1000);
+        }
+
+        function startFallingHearts() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => createFallingHeart(), i * 1000);
+            }
+
+            setInterval(() => {
+                createFallingHeart();
+            }, 2000 + Math.random() * 2000);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(startFallingHearts, 1000);
+        });
+    </script>
+
+    <!-- Falling Hearts Container -->
+    <div class="falling-hearts-container" id="fallingHeartsContainer"></div>
+</body>
+</html>

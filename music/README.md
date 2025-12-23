@@ -1,81 +1,81 @@
-# 🎵 Music Player Instructions
+# 🎵 Hướng Dẫn Trình Phát Nhạc
 
-## How to Add Music to Your Wedding Website
+## Cách Thêm Nhạc Vào Website Thiệp Cưới
 
-### Quick Start
+### Bắt Đầu Nhanh
 
-1. **Add your .mp3 files** to this `/music` folder
-2. **Run the generator script** to update the playlist:
+1. **Thêm các file .mp3** vào thư mục `/music` này
+2. **Chạy script tự động** để cập nhật danh sách phát:
    ```bash
    node generate-music-manifest.js
    ```
-3. **Reload your website** - the music will automatically play!
+3. **Tải lại website** - nhạc sẽ tự động phát!
 
 ---
 
-## Detailed Instructions
+## Hướng Dẫn Chi Tiết
 
-### Method 1: Automatic (Recommended)
+### Phương pháp 1: Tự động (Khuyên dùng)
 
-1. Copy your .mp3 files into this `/music` folder
-2. Open terminal/command prompt in the project root directory
-3. Run:
+1. Sao chép các file .mp3 của bạn vào thư mục `/music` này
+2. Mở terminal/command prompt tại thư mục gốc của dự án
+3. Chạy lệnh:
    ```bash
    node generate-music-manifest.js
    ```
-4. This will automatically scan the `/music` folder and create/update `manifest.json`
+4. Script sẽ tự động quét thư mục `/music` và tạo/cập nhật file `manifest.json`
 
-### Method 2: Manual
+### Phương pháp 2: Thủ công
 
-If you don't want to use the script, you can manually edit `manifest.json`:
+Nếu bạn không muốn dùng script, bạn có thể tự chỉnh sửa file `manifest.json`:
 
 ```json
 [
-  "song1.mp3",
-  "song2.mp3",
-  "my-favorite-song.mp3"
+  "bai-hat-1.mp3",
+  "bai-hat-2.mp3",
+  "bai-hat-yeu-thich.mp3"
 ]
 ```
 
-Just list all your .mp3 filenames in the array.
+Chỉ cần liệt kê tất cả tên file .mp3 trong mảng.
 
 ---
 
-## File Naming Tips
+## Mẹo Đặt Tên File
 
-- Use simple filenames without special characters
-- Examples: `song1.mp3`, `wedding-theme.mp3`, `romantic-music.mp3`
-- The music will play in the order listed in manifest.json
-
----
-
-## How the Music Player Works
-
-1. When visitors open your website, the music player initializes
-2. Music starts playing automatically after the first user interaction (click, scroll, or mouse move)
-3. The playlist plays continuously, moving to the next track when one finishes
-4. Visitors can pause/play using the 🎵 button in the corner
-5. If a track fails to load, it automatically skips to the next one
+- Dùng tên file đơn giản, không dùng ký tự đặc biệt
+- Ví dụ: `bai-hat-1.mp3`, `nhac-cuoi.mp3`, `nhac-lang-man.mp3`
+- Nhạc sẽ phát theo thứ tự trong file manifest.json
 
 ---
 
-## Troubleshooting
+## Cách Trình Phát Nhạc Hoạt Động
 
-**Music not playing?**
-- Check that your .mp3 files are actually in the `/music` folder
-- Make sure `manifest.json` exists and lists your files correctly
-- Run `node generate-music-manifest.js` to regenerate the manifest
-- Open browser console (F12) to see detailed logs
-
-**Want to change the play order?**
-- Edit `manifest.json` and reorder the filenames
-- Or rename your files and regenerate the manifest
+1. Khi khách truy cập website, trình phát nhạc sẽ khởi tạo
+2. Nhạc bắt đầu phát tự động sau khi người dùng có tương tác đầu tiên (click, cuộn trang, hoặc di chuyển chuột)
+3. Danh sách phát chạy liên tục, tự động chuyển sang bài tiếp theo khi bài hiện tại kết thúc
+4. Khách có thể tạm dừng/phát nhạc bằng nút 🎵 ở góc màn hình
+5. Nếu một bài hát không tải được, hệ thống tự động bỏ qua và phát bài tiếp theo
 
 ---
 
-## Browser Autoplay Policy
+## Khắc Phục Sự Cố
 
-Modern browsers block autoplay until user interaction. That's why:
-- Music starts after first click/scroll/mouse move
-- The 🎵 button helps users control playback
-- This is normal browser behavior for better user experience
+**Nhạc không phát?**
+- Kiểm tra các file .mp3 có thực sự trong thư mục `/music` không
+- Đảm bảo file `manifest.json` tồn tại và liệt kê đúng tên các file
+- Chạy lệnh `node generate-music-manifest.js` để tạo lại manifest
+- Mở console của trình duyệt (phím F12) để xem log chi tiết
+
+**Muốn thay đổi thứ tự phát?**
+- Chỉnh sửa file `manifest.json` và sắp xếp lại thứ tự tên file
+- Hoặc đổi tên các file và chạy lại script để tạo manifest mới
+
+---
+
+## Chính Sách Tự Động Phát Của Trình Duyệt
+
+Các trình duyệt hiện đại chặn tự động phát nhạc cho đến khi có tương tác của người dùng. Vì vậy:
+- Nhạc sẽ bắt đầu sau lần click/cuộn/di chuyển chuột đầu tiên
+- Nút 🎵 giúp người dùng điều khiển việc phát nhạc
+- Đây là hành vi bình thường của trình duyệt để có trải nghiệm người dùng tốt hơn

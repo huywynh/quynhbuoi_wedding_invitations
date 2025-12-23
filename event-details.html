@@ -115,24 +115,6 @@
             line-height: 1.6;
         }
 
-        .event-description {
-            margin-bottom: 40px;
-        }
-
-        .event-description h3 {
-            font-family: var(--font-primary);
-            font-size: 1.6rem;
-            color: var(--primary-color);
-            margin: 0 0 20px 0;
-        }
-
-        .event-description p {
-            color: var(--dark-color);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-
         .event-actions {
             display: flex;
             gap: 15px;
@@ -225,6 +207,139 @@
                 padding: 20px;
             }
         }
+
+        /* Event Gallery Section */
+        .event-gallery-section {
+            margin-top: 60px;
+            padding-top: 40px;
+        }
+
+        .event-gallery-section .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .event-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .event-gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 10px;
+            line-height: 1;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 20px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .event-gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .lightbox-prev,
+            .lightbox-next {
+                font-size: 30px;
+                padding: 10px;
+            }
+
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -275,10 +390,10 @@
                         </div>
                     </div>
 
-                    <div class="event-description">
+                    <!-- <div class="event-description">
                         <h3>Về Sự Kiện</h3>
                         <div id="eventDescription"></div>
-                    </div>
+                    </div> -->
 
                     <div class="event-actions">
                         <button class="btn btn-primary" id="btnAddToCalendar">
@@ -290,8 +405,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Event Gallery Section -->
+            <div class="event-gallery-section" id="eventGallerySection" style="display: none;">
+                <h2 class="section-title">Album Ảnh Sự Kiện</h2>
+                <div class="event-gallery-grid" id="eventGalleryGrid">
+                    <!-- Gallery images will be loaded dynamically -->
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-prev" onclick="changeLightboxImage(-1)">‹</button>
+        <img id="lightboxImg" src="" alt="Lightbox Image">
+        <button class="lightbox-next" onclick="changeLightboxImage(1)">›</button>
+    </div>
 
     <footer class="footer">
         <div class="container">
@@ -306,13 +437,13 @@
         // Event data
         const eventData = {
             'dinh-hon': {
-                title: 'Lễ Định Hôn',
+                title: 'Lễ Đính Hôn',
                 subtitle: 'Đám Hỏi',
-                image: 'https://via.placeholder.com/900x400/D4AF37/FFFFFF?text=Lễ+Định+Hôn',
+                image: 'event/DSC_0277.JPG',
                 location: 'Tư gia nhà gái',
                 time: '10:00 - Ngày 30/11/2025',
                 lunar: 'Nhằm ngày 11/10 âm lịch',
-                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                mapUrl: 'https://maps.app.goo.gl/eR8dES7xzNwmRQtZ6',
                 description: `
                     <p>Lễ định hôn là bước đầu tiên trong hành trình trăm năm hạnh phúc của chúng tôi.
                     Đây là dịp để hai gia đình gặp gỡ, trao đổi và chính thức gắn kết hai họ thành một.</p>
@@ -320,7 +451,25 @@
                     để cầu hôn theo phong tục Việt Nam. Đây là một nghi lễ trang trọng và ý nghĩa,
                     đánh dấu sự khởi đầu của một cuộc sống mới.</p>
                     <p>Chúng tôi rất vinh hạnh được có sự hiện diện của quý khách trong ngày quan trọng này.</p>
-                `
+                `,
+                galleryImages: [
+                    'event1/DSC_0657.jpg', 'event1/DSC_0659.jpg', 'event1/DSC_0660.jpg', 'event1/DSC_0661.jpg',
+                    'event1/DSC_0662.jpg', 'event1/DSC_0667.jpg', 'event1/DSC_0671.jpg', 'event1/DSC_0676.jpg',
+                    'event1/DSC_0683.jpg', 'event1/DSC_0701.jpg', 'event1/DSC_0709.jpg', 'event1/DSC_0718.jpg',
+                    'event1/DSC_0722.jpg', 'event1/DSC_0725.jpg', 'event1/DSC_0735.jpg', 'event1/DSC_0757.jpg',
+                    'event1/DSC_0811.jpg', 'event1/DSC_0848.jpg', 'event1/DSC_0860.jpg', 'event1/DSC_0902.jpg',
+                    'event1/DSC_0904.jpg', 'event1/DSC_1201.jpg', 'event1/DSC_1203.jpg', 'event1/DSC_1205.jpg',
+                    'event1/DSC_1207.jpg', 'event1/DSC_1214.jpg', 'event1/DSC_1273.jpg', 'event1/DSC_1275.jpg',
+                    'event1/DSC_1277.jpg', 'event1/DSC_1283.jpg', 'event1/DSC_1285.jpg', 'event1/DSC_1287.jpg',
+                    'event1/DSC_1303.jpg', 'event1/DSC_1307.jpg', 'event1/DSC_1335.jpg', 'event1/DSC_1340.jpg',
+                    'event1/DSC_1344.jpg', 'event1/DSC_1351.jpg', 'event1/DSC_1356.jpg', 'event1/DSC_1360.jpg',
+                    'event1/DSC_1370.jpg', 'event1/DSC_1376.jpg', 'event1/DSC_1379.jpg', 'event1/DSC_1425.jpg',
+                    'event1/DSC_1438.jpg', 'event1/DSC_1442.jpg', 'event1/DSC_1447.jpg', 'event1/DSC_1451.jpg',
+                    'event1/DSC_1453.jpg', 'event1/DSC_1456.jpg', 'event1/DSC_1459.jpg', 'event1/DSC_1490.jpg',
+                    'event1/DSC_1525.jpg', 'event1/DSC_1528.jpg', 'event1/DSC_1549.jpg', 'event1/DSC_1555.jpg',
+                    'event1/DSC_1561.jpg', 'event1/DSC_1569.jpg', 'event1/DSC_1573.jpg', 'event1/DSC_1576.jpg',
+                    'event1/DSC_1583.jpg', 'event1/DSC_1595.jpg'
+                ]
             },
             'vu-quy': {
                 title: 'Lễ Vu Quy',
@@ -390,7 +539,6 @@
             document.getElementById('eventLocation').textContent = event.location;
             document.getElementById('eventTime').textContent = event.time;
             document.getElementById('eventLunar').textContent = event.lunar;
-            document.getElementById('eventDescription').innerHTML = event.description;
             document.getElementById('btnViewMap').href = event.mapUrl;
 
             // Add to calendar button
@@ -400,10 +548,136 @@
 
             // Update page title
             document.title = `${event.title} - Thiệp Cưới Huy Quỳnh & Hoa Bưởi`;
+
+            // Load gallery if available
+            if (event.galleryImages && event.galleryImages.length > 0) {
+                const gallerySection = document.getElementById('eventGallerySection');
+                const galleryGrid = document.getElementById('eventGalleryGrid');
+
+                gallerySection.style.display = 'block';
+
+                event.galleryImages.forEach((imageSrc, index) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'event-gallery-item';
+                    galleryItem.setAttribute('data-index', index);
+
+                    const img = document.createElement('img');
+                    img.src = imageSrc;
+                    img.alt = `${event.title} - Ảnh ${index + 1}`;
+
+                    galleryItem.appendChild(img);
+                    galleryGrid.appendChild(galleryItem);
+
+                    // Add click event to open lightbox
+                    galleryItem.addEventListener('click', () => {
+                        currentImageIndex = index;
+                        currentGalleryImages = event.galleryImages;
+                        openLightbox(imageSrc);
+                    });
+                });
+            }
         } else {
             // Redirect to home if event not found
             window.location.href = 'index.html#event';
         }
+
+        // Lightbox functionality
+        let currentImageIndex = 0;
+        let currentGalleryImages = [];
+
+        function openLightbox(src) {
+            document.getElementById('lightbox').classList.add('active');
+            document.getElementById('lightboxImg').src = src;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            if (currentGalleryImages.length === 0) return;
+
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) {
+                currentImageIndex = currentGalleryImages.length - 1;
+            } else if (currentImageIndex >= currentGalleryImages.length) {
+                currentImageIndex = 0;
+            }
+            document.getElementById('lightboxImg').src = currentGalleryImages[currentImageIndex];
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeLightboxImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeLightboxImage(1);
+            }
+        });
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Falling Hearts Animation
+        function createFallingHeart() {
+            const container = document.getElementById('fallingHeartsContainer');
+            if (!container) return;
+
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.innerHTML = '♥';
+
+            const sizes = ['small', 'medium', 'large'];
+            const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+            heart.classList.add(randomSize);
+
+            const colors = ['pink', 'gold', 'rose', 'light-pink'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            heart.classList.add(randomColor);
+
+            const randomLeft = Math.random() * 100;
+            heart.style.left = randomLeft + '%';
+
+            const randomDrift = (Math.random() - 0.5) * 100;
+            heart.style.setProperty('--drift', randomDrift + 'px');
+
+            const randomDuration = 8 + Math.random() * 6;
+            heart.style.animationDuration = randomDuration + 's';
+
+            const randomDelay = Math.random() * 3;
+            heart.style.animationDelay = randomDelay + 's';
+
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, (randomDuration + randomDelay) * 1000);
+        }
+
+        function startFallingHearts() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => createFallingHeart(), i * 1000);
+            }
+
+            setInterval(() => {
+                createFallingHeart();
+            }, 2000 + Math.random() * 2000);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(startFallingHearts, 1000);
+        });
     </script>
+
+    <!-- Falling Hearts Container -->
+    <div class="falling-hearts-container" id="fallingHeartsContainer"></div>
 </body>
 </html>
