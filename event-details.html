@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Sự Kiện - Thiệp Cưới Huy Quỳnh & Hoa Bưởi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Event Details Page Specific Styles */
+        .event-details-page {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+            padding: 100px 0 80px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--white);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-detail-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-detail-hero {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-detail-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-detail-content {
+            padding: 50px 60px;
+        }
+
+        .event-detail-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .event-detail-title {
+            font-family: var(--font-primary);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+        }
+
+        .event-detail-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .event-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .event-info-box {
+            background: var(--light-color);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .event-info-box h4 {
+            font-family: var(--font-primary);
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-info-box p {
+            margin: 5px 0;
+            color: var(--dark-color);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .event-description {
+            margin-bottom: 40px;
+        }
+
+        .event-description h3 {
+            font-family: var(--font-primary);
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin: 0 0 20px 0;
+        }
+
+        .event-description p {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding-top: 30px;
+            border-top: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .event-actions .btn {
+            padding: 16px 35px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-actions .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .event-actions .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .event-actions .btn-secondary {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .event-actions .btn-secondary:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .event-details-page {
+                padding: 80px 0 60px;
+            }
+
+            .event-detail-hero {
+                height: 300px;
+            }
+
+            .event-detail-content {
+                padding: 35px 30px;
+            }
+
+            .event-detail-title {
+                font-size: 2.2rem;
+            }
+
+            .event-info-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .event-actions {
+                flex-direction: column;
+            }
+
+            .event-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .event-detail-content {
+                padding: 25px 20px;
+            }
+
+            .event-detail-title {
+                font-size: 1.8rem;
+            }
+
+            .event-detail-subtitle {
+                font-size: 1rem;
+            }
+
+            .event-info-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="logo">Q <span class="heart">❤</span> B</div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="main-nav">
+                <a href="index.html#couple">Cặp đôi</a>
+                <a href="index.html#event">Sự kiện</a>
+                <a href="index.html#gallery">Album hình</a>
+                <a href="index.html#rsvp">Sổ lưu bút</a>
+                <a href="index.html#map">Mừng cưới</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="event-details-page">
+        <div class="container">
+            <a href="index.html#event" class="back-button">
+                ← Quay lại danh sách sự kiện
+            </a>
+
+            <div class="event-detail-container" id="eventDetailContainer">
+                <!-- Content will be loaded dynamically via JavaScript -->
+                <div class="event-detail-hero">
+                    <img id="eventImage" src="" alt="Event Image">
+                </div>
+                <div class="event-detail-content">
+                    <div class="event-detail-header">
+                        <h1 class="event-detail-title" id="eventTitle"></h1>
+                        <p class="event-detail-subtitle" id="eventSubtitle"></p>
+                    </div>
+
+                    <div class="event-info-grid">
+                        <div class="event-info-box">
+                            <h4>📍 Địa Điểm</h4>
+                            <p id="eventLocation"></p>
+                        </div>
+                        <div class="event-info-box">
+                            <h4>🕐 Thời Gian</h4>
+                            <p id="eventTime"></p>
+                            <p id="eventLunar" style="font-size: 0.9rem; color: #888; font-style: italic;"></p>
+                        </div>
+                    </div>
+
+                    <div class="event-description">
+                        <h3>Về Sự Kiện</h3>
+                        <div id="eventDescription"></div>
+                    </div>
+
+                    <div class="event-actions">
+                        <button class="btn btn-primary" id="btnAddToCalendar">
+                            📅 Thêm vào lịch
+                        </button>
+                        <a href="#" class="btn btn-secondary" id="btnViewMap" target="_blank">
+                            🗺️ Xem bản đồ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="thank-you">Cảm ơn bạn đã ghé thăm!</p>
+            <p class="couple-signature">Huy Quỳnh & Hoa Bưởi</p>
+            <p class="footer-date">25.01.2026</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Event data
+        const eventData = {
+            'dinh-hon': {
+                title: 'Lễ Định Hôn',
+                subtitle: 'Đám Hỏi',
+                image: 'https://via.placeholder.com/900x400/D4AF37/FFFFFF?text=Lễ+Định+Hôn',
+                location: 'Tư gia nhà gái',
+                time: '10:00 - Ngày 30/11/2025',
+                lunar: 'Nhằm ngày 11/10 âm lịch',
+                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                description: `
+                    <p>Lễ định hôn là bước đầu tiên trong hành trình trăm năm hạnh phúc của chúng tôi.
+                    Đây là dịp để hai gia đình gặp gỡ, trao đổi và chính thức gắn kết hai họ thành một.</p>
+                    <p>Trong buổi lễ, gia đình nhà trai sẽ đến nhà gái với những lễ vật truyền thống
+                    để cầu hôn theo phong tục Việt Nam. Đây là một nghi lễ trang trọng và ý nghĩa,
+                    đánh dấu sự khởi đầu của một cuộc sống mới.</p>
+                    <p>Chúng tôi rất vinh hạnh được có sự hiện diện của quý khách trong ngày quan trọng này.</p>
+                `
+            },
+            'vu-quy': {
+                title: 'Lễ Vu Quy',
+                subtitle: 'Ngày Về Nhà Chồng',
+                image: 'https://via.placeholder.com/900x400/FFB6C1/FFFFFF?text=Lễ+Vu+Quy',
+                location: 'Tư gia nhà gái',
+                time: '06:00 - Ngày 17/01/2026',
+                lunar: 'Nhằm ngày 29/11 âm lịch',
+                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                description: `
+                    <p>Lễ Vu Quy là một trong những nghi lễ quan trọng và xúc động nhất trong đám cưới truyền thống Việt Nam.
+                    Đây là lúc cô dâu chính thức rời bỏ tổ ấm để bắt đầu cuộc sống mới bên gia đình nhà chồng.</p>
+                    <p>Buổi sáng sớm, gia đình nhà trai sẽ đến rước dâu về dinh với đoàn xe hoa rực rỡ.
+                    Trước khi lên xe hoa, cô dâu sẽ cúi đầu tạ ơn cha mẹ, ông bà đã nuôi nấng, chăm sóc suốt những năm tháng qua.</p>
+                    <p>Đây là khoảnh khắc đầy cảm xúc nhất, khi người con gái bước sang một trang mới của cuộc đời.</p>
+                `
+            },
+            'thanh-hon': {
+                title: 'Lễ Thành Hôn',
+                subtitle: 'Rước Dâu & Lễ Gia Tiên',
+                image: 'https://via.placeholder.com/900x400/C9A961/FFFFFF?text=Lễ+Thành+Hôn',
+                location: 'Tư gia nhà trai',
+                time: '10:00 - Ngày 24/01/2026',
+                lunar: 'Nhằm ngày 06/12 âm lịch',
+                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                description: `
+                    <p>Lễ Thành Hôn tại nhà trai là nghi lễ chính thức đánh dấu sự kết hợp của hai gia đình.
+                    Sau khi rước dâu về, cô dâu chú rể sẽ cùng nhau làm lễ gia tiên, báo cáo với tổ tiên về việc thành hôn.</p>
+                    <p>Trong nghi lễ này, cô dâu sẽ được chính thức giới thiệu với họ hàng nhà chồng,
+                    đồng thời thực hiện các nghi thức truyền thống như lạy ông bà, cha mẹ hai bên.</p>
+                    <p>Đây là thời khắc thiêng liêng nhất, khi hai trái tim chính thức gắn kết thành một
+                    trước sự chứng giám của tổ tiên và gia đình hai bên.</p>
+                `
+            },
+            'tiec-cuoi': {
+                title: 'Tiệc Mừng Thành Hôn',
+                subtitle: 'Đãi Tiệc Tại Nhà Hàng',
+                image: 'https://via.placeholder.com/900x400/D4AF37/FFFFFF?text=Tiệc+Cưới',
+                location: 'Nhà Hàng Tiệc Cưới Kim Cương - Sảnh Cát Tường',
+                time: '11:00 - Ngày 25/01/2026',
+                lunar: 'Nhằm ngày 07/12 âm lịch',
+                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                description: `
+                    <p>Tiệc cưới là dịp để chúng tôi chia sẻ niềm hạnh phúc với tất cả người thân,
+                    bạn bè và những người đã đồng hành cùng chúng tôi trong suốt hành trình vừa qua.</p>
+                    <p>Buổi tiệc sẽ được tổ chức tại Nhà Hàng Kim Cương - một trong những địa điểm
+                    sang trọng và đẳng cấp nhất. Chúng tôi đã chuẩn bị rất kỹ lưỡng để mang đến
+                    cho quý khách một bữa tiệc ấm cúng, vui vẻ và đáng nhớ.</p>
+                    <p>Sự hiện diện của quý khách chính là món quà vô giá nhất mà chúng tôi mong muốn
+                    nhận được trong ngày trọng đại này. Rất mong được đón tiếp quý khách!</p>
+                    <p><strong>Dress code:</strong> Smart Casual - Trang phục lịch sự, thoải mái</p>
+                `
+            }
+        };
+
+        // Get event ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+
+        // Load event details
+        if (eventId && eventData[eventId]) {
+            const event = eventData[eventId];
+
+            document.getElementById('eventImage').src = event.image;
+            document.getElementById('eventTitle').textContent = event.title;
+            document.getElementById('eventSubtitle').textContent = event.subtitle;
+            document.getElementById('eventLocation').textContent = event.location;
+            document.getElementById('eventTime').textContent = event.time;
+            document.getElementById('eventLunar').textContent = event.lunar;
+            document.getElementById('eventDescription').innerHTML = event.description;
+            document.getElementById('btnViewMap').href = event.mapUrl;
+
+            // Add to calendar button
+            document.getElementById('btnAddToCalendar').addEventListener('click', function() {
+                addToCalendar(eventId);
+            });
+
+            // Update page title
+            document.title = `${event.title} - Thiệp Cưới Huy Quỳnh & Hoa Bưởi`;
+        } else {
+            // Redirect to home if event not found
+            window.location.href = 'index.html#event';
+        }
+    </script>
+</body>
+</html>

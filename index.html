@@ -111,19 +111,121 @@
     <section id="event" class="event-section">
         <div class="container">
             <h2 class="section-title">Thông Tin Đám Cưới</h2>
-            <div class="event-details">
-                <div class="event-item">
-                    <div class="event-icon">📅</div>
-                    <h3>Ngày Giờ</h3>
-                    <p>11:00 Sáng</p>
-                    <p>Chủ nhật, 25 tháng 01 năm 2026</p>
+            <div class="event-cards">
+                <!-- Event Card 1: Lễ Định Hôn -->
+                <div class="event-card" data-event-id="dinh-hon">
+                    <div class="event-card-image">
+                        <img src="https://via.placeholder.com/400x300/D4AF37/FFFFFF?text=Lễ+Định+Hôn" alt="Lễ Định Hôn">
+                    </div>
+                    <div class="event-card-content">
+                        <h3 class="event-card-title">Lễ Định Hôn</h3>
+                        <p class="event-card-subtitle">Đám Hỏi</p>
+                        <div class="event-card-info">
+                            <div class="event-info-item">
+                                <span class="event-icon">📍</span>
+                                <span>Tư gia nhà gái</span>
+                            </div>
+                            <div class="event-info-item">
+                                <span class="event-icon">🕙</span>
+                                <span>10:00 - 30/11/2025</span>
+                            </div>
+                            <div class="event-info-item lunar">
+                                <span>Nhằm ngày 11/10 âm lịch</span>
+                            </div>
+                        </div>
+                        <div class="event-card-actions">
+                            <button class="btn-calendar" onclick="addToCalendar('dinh-hon')">Thêm vào lịch</button>
+                            <a href="event-details.html?id=dinh-hon" class="btn-details">Xem chi tiết</a>
+                            <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="btn-map">Xem bản đồ</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="event-item">
-                    <div class="event-icon">📍</div>
-                    <h3>Địa Điểm</h3>
-                    <p><strong>Nhà Hàng Tiệc Cưới Kim Cương</strong></p>
-                    <p>(Sảnh Cát Tường)</p>
-                    <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="map-button">Xem Bản Đồ</a>
+
+                <!-- Event Card 2: Lễ Vu Quy -->
+                <div class="event-card" data-event-id="vu-quy">
+                    <div class="event-card-image">
+                        <img src="https://via.placeholder.com/400x300/FFB6C1/FFFFFF?text=Lễ+Vu+Quy" alt="Lễ Vu Quy">
+                    </div>
+                    <div class="event-card-content">
+                        <h3 class="event-card-title">Lễ Vu Quy</h3>
+                        <p class="event-card-subtitle">Ngày Về Nhà Chồng</p>
+                        <div class="event-card-info">
+                            <div class="event-info-item">
+                                <span class="event-icon">📍</span>
+                                <span>Tư gia nhà gái</span>
+                            </div>
+                            <div class="event-info-item">
+                                <span class="event-icon">🕕</span>
+                                <span>06:00 - 17/01/2026</span>
+                            </div>
+                            <div class="event-info-item lunar">
+                                <span>Nhằm ngày 29/11 âm lịch</span>
+                            </div>
+                        </div>
+                        <div class="event-card-actions">
+                            <button class="btn-calendar" onclick="addToCalendar('vu-quy')">Thêm vào lịch</button>
+                            <a href="event-details.html?id=vu-quy" class="btn-details">Xem chi tiết</a>
+                            <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="btn-map">Xem bản đồ</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3: Lễ Thành Hôn -->
+                <div class="event-card" data-event-id="thanh-hon">
+                    <div class="event-card-image">
+                        <img src="https://via.placeholder.com/400x300/C9A961/FFFFFF?text=Lễ+Thành+Hôn" alt="Lễ Thành Hôn">
+                    </div>
+                    <div class="event-card-content">
+                        <h3 class="event-card-title">Lễ Thành Hôn</h3>
+                        <p class="event-card-subtitle">Rước Dâu & Lễ Gia Tiên</p>
+                        <div class="event-card-info">
+                            <div class="event-info-item">
+                                <span class="event-icon">📍</span>
+                                <span>Tư gia nhà trai</span>
+                            </div>
+                            <div class="event-info-item">
+                                <span class="event-icon">🕙</span>
+                                <span>10:00 - 24/01/2026</span>
+                            </div>
+                            <div class="event-info-item lunar">
+                                <span>Nhằm ngày 06/12 âm lịch</span>
+                            </div>
+                        </div>
+                        <div class="event-card-actions">
+                            <button class="btn-calendar" onclick="addToCalendar('thanh-hon')">Thêm vào lịch</button>
+                            <a href="event-details.html?id=thanh-hon" class="btn-details">Xem chi tiết</a>
+                            <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="btn-map">Xem bản đồ</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 4: Tiệc Mừng Thành Hôn -->
+                <div class="event-card" data-event-id="tiec-cuoi">
+                    <div class="event-card-image">
+                        <img src="https://via.placeholder.com/400x300/D4AF37/FFFFFF?text=Tiệc+Cưới" alt="Tiệc Cưới">
+                    </div>
+                    <div class="event-card-content">
+                        <h3 class="event-card-title">Tiệc Mừng Thành Hôn</h3>
+                        <p class="event-card-subtitle">Đãi Tiệc Tại Nhà Hàng</p>
+                        <div class="event-card-info">
+                            <div class="event-info-item">
+                                <span class="event-icon">📍</span>
+                                <span>Nhà Hàng Kim Cương</span>
+                            </div>
+                            <div class="event-info-item">
+                                <span class="event-icon">🕚</span>
+                                <span>11:00 - 25/01/2026</span>
+                            </div>
+                            <div class="event-info-item lunar">
+                                <span>Nhằm ngày 07/12 âm lịch</span>
+                            </div>
+                        </div>
+                        <div class="event-card-actions">
+                            <button class="btn-calendar" onclick="addToCalendar('tiec-cuoi')">Thêm vào lịch</button>
+                            <a href="event-details.html?id=tiec-cuoi" class="btn-details">Xem chi tiết</a>
+                            <a href="https://maps.app.goo.gl/ADh5RekNcqBQPMYu6" target="_blank" class="btn-map">Xem bản đồ</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -212,7 +314,7 @@
     <footer class="footer">
         <div class="container">
             <p class="thank-you">Cảm ơn bạn đã ghé thăm!</p>
-            <p class="couple-signature">Quỳnh & Hoa Bưởi</p>
+            <p class="couple-signature">Huy Quỳnh & Hoa Bưởi</p>
             <p class="footer-date">25.01.2026</p>
         </div>
     </footer>

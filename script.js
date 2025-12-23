@@ -448,5 +448,95 @@ document.querySelector('.hero').style.transform = 'translateY(0)';
     }
 })();
 
+// Add to Calendar Function
+function addToCalendar(eventId) {
+    const events = {
+        'dinh-hon': {
+            title: 'Lễ Định Hôn - Huy Quỳnh & Hoa Bưởi',
+            location: 'Tư gia nhà gái',
+            description: 'Lễ Định Hôn (Đám Hỏi) của Huy Quỳnh và Hoa Bưởi',
+            start: '2025-11-30T10:00:00',
+            end: '2025-11-30T12:00:00'
+        },
+        'vu-quy': {
+            title: 'Lễ Vu Quy - Huy Quỳnh & Hoa Bưởi',
+            location: 'Tư gia nhà gái',
+            description: 'Lễ Vu Quy - Ngày về nhà chồng',
+            start: '2026-01-17T06:00:00',
+            end: '2026-01-17T09:00:00'
+        },
+        'thanh-hon': {
+            title: 'Lễ Thành Hôn - Huy Quỳnh & Hoa Bưởi',
+            location: 'Tư gia nhà trai',
+            description: 'Lễ Thành Hôn - Rước dâu & Lễ gia tiên',
+            start: '2026-01-24T10:00:00',
+            end: '2026-01-24T13:00:00'
+        },
+        'tiec-cuoi': {
+            title: 'Tiệc Cưới - Huy Quỳnh & Hoa Bưởi',
+            location: 'Nhà Hàng Tiệc Cưới Kim Cương - Sảnh Cát Tường',
+            description: 'Tiệc Mừng Thành Hôn tại Nhà Hàng Kim Cương',
+            start: '2026-01-25T11:00:00',
+            end: '2026-01-25T14:00:00'
+        }
+    };
+
+    const event = events[eventId];
+    if (!event) {
+        console.error('Event not found:', eventId);
+        return;
+    }
+
+    // Format dates for different calendar formats
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end);
+
+    // Google Calendar format
+    const formatDateForGoogle = (date) => {
+        return date.toISOString().replace(/-|:|\.\d+/g, '');
+    };
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${formatDateForGoogle(startDate)}/${formatDateForGoogle(endDate)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
+
+    // iCal format (for Apple Calendar, Outlook, etc.)
+    const formatDateForICal = (date) => {
+        return date.toISOString().replace(/-|:|\.\d+/g, '');
+    };
+
+    const icalContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Huy Quỳnh & Hoa Bưởi//Wedding//EN
+BEGIN:VEVENT
+DTSTART:${formatDateForICal(startDate)}
+DTEND:${formatDateForICal(endDate)}
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR`;
+
+    // Detect device/browser and open appropriate calendar
+    const isAppleDevice = /iPhone|iPad|iPod|Mac/i.test(navigator.userAgent);
+    const isOutlook = /Outlook/i.test(navigator.userAgent);
+
+    if (isAppleDevice || isOutlook) {
+        // Download .ics file for Apple/Outlook
+        const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `wedding-event-${eventId}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('📅 Calendar file downloaded');
+    } else {
+        // Open Google Calendar for other devices
+        window.open(googleCalendarUrl, '_blank');
+        console.log('📅 Opening Google Calendar');
+    }
+}
+
 console.log('🎉 Wedding invitation loaded successfully!');
 console.log('💝 Made with love for Quỳnh & Hoa Bưởi');
