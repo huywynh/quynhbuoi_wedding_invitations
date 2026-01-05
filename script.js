@@ -50,7 +50,7 @@ const mainNav = document.querySelector('.main-nav');
 const navLinks = document.querySelectorAll('.main-nav a');
 
 if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', function() {
+    mobileMenuToggle.addEventListener('click', function () {
         this.classList.toggle('active');
         mainNav.classList.toggle('active');
         document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
@@ -58,7 +58,7 @@ if (mobileMenuToggle) {
 
     // Close menu when clicking on a link
     navLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
             mobileMenuToggle.classList.remove('active');
             mainNav.classList.remove('active');
             document.body.style.overflow = '';
@@ -66,7 +66,7 @@ if (mobileMenuToggle) {
     });
 
     // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!mainNav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
             mobileMenuToggle.classList.remove('active');
             mainNav.classList.remove('active');
@@ -223,7 +223,7 @@ document.addEventListener('scroll', initMusic, { once: true });
 document.addEventListener('mousemove', initMusic, { once: true });
 
 // Toggle play/pause button
-musicToggle.addEventListener('click', async function(e) {
+musicToggle.addEventListener('click', async function (e) {
     e.stopPropagation(); // Ngăn trigger init music event
 
     // Nếu chưa khởi tạo, khởi tạo trước
@@ -256,7 +256,7 @@ const observerOptions = {
     rootMargin: '0px 0px -50px 0px'
 };
 
-const observer = new IntersectionObserver(function(entries) {
+const observer = new IntersectionObserver(function (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('animate');
@@ -287,9 +287,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const rsvpForm = document.getElementById('rsvpForm');
 const formMessage = document.getElementById('formMessage');
 
-rsvpForm.addEventListener('submit', function(e) {
+// Google Apps Script Web App URL
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbythhSAuZQr2EzL65_x-u0pCznEktm5y1Gvh_B62-9ecY34HAX2YPC3aiTyXlLDDEZ5JQ/exec';
+
+rsvpForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    
+
     const formData = {
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
@@ -299,25 +302,13 @@ rsvpForm.addEventListener('submit', function(e) {
         message: document.getElementById('message').value
     };
 
-    // Simulate form submission
-    console.log('Form submitted:', formData);
-    
-    // Show success message
-    formMessage.className = 'form-message success';
-    formMessage.textContent = '✅ Cảm ơn bạn đã xác nhận! Chúng tôi rất mong được gặp bạn trong ngày trọng đại.';
-    
-    // Reset form
-    rsvpForm.reset();
-    
-    // Hide message after 5 seconds
-    setTimeout(() => {
-        formMessage.style.display = 'none';
-    }, 5000);
+    // Show loading message
+    formMessage.style.display = 'block';
+    formMessage.className = 'form-message loading';
+    formMessage.textContent = '⏳ Đang gửi xác nhận...';
 
-    // In production, you would send this data to a server or Google Sheets
-    // Example with Google Sheets Web App:
-    /*
-    fetch('YOUR_GOOGLE_SHEETS_WEB_APP_URL', {
+    // Send data to Google Apps Script
+    fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -325,22 +316,37 @@ rsvpForm.addEventListener('submit', function(e) {
         },
         body: JSON.stringify(formData)
     })
-    .then(() => {
-        formMessage.className = 'form-message success';
-        formMessage.textContent = '✅ Cảm ơn bạn đã xác nhận!';
-        rsvpForm.reset();
-    })
-    .catch((error) => {
-        formMessage.className = 'form-message error';
-        formMessage.textContent = '❌ Có lỗi xảy ra. Vui lòng thử lại!';
-    });
-    */
+        .then(() => {
+            // Show success message
+            formMessage.className = 'form-message success';
+            formMessage.textContent = '✅ Cảm ơn bạn đã xác nhận! Chúng tôi rất mong được gặp bạn trong ngày trọng đại.';
+
+            // Reset form
+            rsvpForm.reset();
+
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, 5000);
+
+            console.log('✅ RSVP submitted successfully');
+        })
+        .catch((error) => {
+            console.error('Error submitting RSVP:', error);
+            formMessage.className = 'form-message error';
+            formMessage.textContent = '❌ Có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ trực tiếp với chúng tôi.';
+
+            // Hide error message after 5 seconds
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, 5000);
+        });
 });
 
 // Gallery lightbox (simple version)
 const galleryItems = document.querySelectorAll('.gallery-item img');
 galleryItems.forEach(img => {
-    img.addEventListener('click', function() {
+    img.addEventListener('click', function () {
         // Create lightbox overlay
         const lightbox = document.createElement('div');
         lightbox.style.cssText = `
@@ -356,7 +362,7 @@ galleryItems.forEach(img => {
             z-index: 10000;
             cursor: pointer;
         `;
-        
+
         const lightboxImg = document.createElement('img');
         lightboxImg.src = this.src;
         lightboxImg.style.cssText = `
@@ -365,19 +371,19 @@ galleryItems.forEach(img => {
             object-fit: contain;
             border-radius: 10px;
         `;
-        
+
         lightbox.appendChild(lightboxImg);
         document.body.appendChild(lightbox);
-        
+
         // Close lightbox on click
-        lightbox.addEventListener('click', function() {
+        lightbox.addEventListener('click', function () {
             document.body.removeChild(lightbox);
         });
     });
 });
 
 // Parallax effect for hero
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero-content');
     if (hero) {
@@ -409,12 +415,12 @@ document.querySelector('.hero').style.opacity = '1';
 document.querySelector('.hero').style.transform = 'translateY(0)';
 
 // Hero slider (3 images in `pic_hero/hero1.jpg`..`hero3.jpg`)
-(function initHeroSlider(){
+(function initHeroSlider() {
     const slides = Array.from(document.querySelectorAll('.hero-slider .slide'));
     if (!slides.length) return;
 
     let current = 0;
-    slides.forEach((s,i)=> { if(i===0) s.classList.add('active'); });
+    slides.forEach((s, i) => { if (i === 0) s.classList.add('active'); });
 
     const show = (index) => {
         slides.forEach((s, i) => {
@@ -442,7 +448,7 @@ document.querySelector('.hero').style.transform = 'translateY(0)';
         heroEl.addEventListener('mouseleave', () => { timer = setInterval(next, 2000); });
     }
 
-    function resetTimer(){
+    function resetTimer() {
         clearInterval(timer);
         timer = setInterval(next, 2000);
     }
@@ -517,25 +523,224 @@ SEQUENCE:0
 END:VEVENT
 END:VCALENDAR`;
 
-    // Detect device/browser and open appropriate calendar
-    const isAppleDevice = /iPhone|iPad|iPod|Mac/i.test(navigator.userAgent);
-    const isOutlook = /Outlook/i.test(navigator.userAgent);
+    // Create modal to let user choose calendar type
+    showCalendarModal(googleCalendarUrl, icalContent, eventId);
+}
 
-    if (isAppleDevice || isOutlook) {
-        // Download .ics file for Apple/Outlook
-        const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = `wedding-event-${eventId}.ics`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        console.log('📅 Calendar file downloaded');
-    } else {
-        // Open Google Calendar for other devices
-        window.open(googleCalendarUrl, '_blank');
-        console.log('📅 Opening Google Calendar');
+// Show calendar selection modal
+function showCalendarModal(googleUrl, icalContent, eventId) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('calendarModal');
+    if (existingModal) {
+        existingModal.remove();
     }
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'calendarModal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+    `;
+
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+    `;
+
+    modalContent.innerHTML = `
+        <h3 style="margin: 0 0 1.5rem 0; font-family: var(--font-serif); color: var(--primary-color); text-align: center; font-size: 1.5rem;">
+            Thêm vào lịch
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <button class="calendar-option" data-type="google" style="
+                padding: 1rem;
+                border: 2px solid var(--primary-color);
+                background: white;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-family: var(--font-body);
+            ">
+                <span style="font-size: 1.5rem;">📅</span>
+                <span style="flex: 1; text-align: left;">Google Calendar</span>
+            </button>
+            <button class="calendar-option" data-type="apple" style="
+                padding: 1rem;
+                border: 2px solid var(--primary-color);
+                background: white;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-family: var(--font-body);
+            ">
+                <span style="font-size: 1.5rem;">🍎</span>
+                <span style="flex: 1; text-align: left;">Apple Calendar</span>
+            </button>
+            <button class="calendar-option" data-type="outlook" style="
+                padding: 1rem;
+                border: 2px solid var(--primary-color);
+                background: white;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-family: var(--font-body);
+            ">
+                <span style="font-size: 1.5rem;">📧</span>
+                <span style="flex: 1; text-align: left;">Outlook / Office 365</span>
+            </button>
+            <button class="calendar-option" data-type="ics" style="
+                padding: 1rem;
+                border: 2px solid var(--primary-color);
+                background: white;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-family: var(--font-body);
+            ">
+                <span style="font-size: 1.5rem;">💾</span>
+                <span style="flex: 1; text-align: left;">Tải file .ics</span>
+            </button>
+        </div>
+        <button id="closeCalendarModal" style="
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: background 0.3s ease;
+        ">
+            Đóng
+        </button>
+    `;
+
+    // Add animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .calendar-option:hover {
+            background: var(--primary-color) !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        #closeCalendarModal:hover {
+            background: #e0e0e0 !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Handle calendar option clicks
+    const options = modal.querySelectorAll('.calendar-option');
+    options.forEach(option => {
+        option.addEventListener('click', function () {
+            const type = this.getAttribute('data-type');
+
+            if (type === 'google') {
+                // Open Google Calendar
+                window.open(googleUrl, '_blank');
+                console.log('📅 Opening Google Calendar');
+            } else if (type === 'apple' || type === 'outlook' || type === 'ics') {
+                // Download .ics file
+                const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `wedding-event-${eventId}.ics`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Show instruction message
+                const msg = document.createElement('div');
+                msg.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 1.5rem 2rem;
+                    border-radius: 10px;
+                    z-index: 10001;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                    text-align: center;
+                    font-family: var(--font-body);
+                `;
+                msg.innerHTML = `
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                    <div style="font-size: 1.1rem; font-weight: 500;">File đã được tải xuống!</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">Mở file để thêm vào lịch của bạn</div>
+                `;
+                document.body.appendChild(msg);
+
+                setTimeout(() => {
+                    msg.style.transition = 'opacity 0.3s ease';
+                    msg.style.opacity = '0';
+                    setTimeout(() => msg.remove(), 300);
+                }, 2500);
+
+                console.log('📅 Calendar file downloaded');
+            }
+
+            modal.remove();
+        });
+    });
+
+    // Close modal
+    const closeBtn = modal.querySelector('#closeCalendarModal');
+    closeBtn.addEventListener('click', () => modal.remove());
+
+    // Close on background click
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
 }
 
 console.log('🎉 Wedding invitation loaded successfully!');
