@@ -541,37 +541,104 @@ function showCalendarModal(googleUrl, icalContent, eventId) {
                 }
                 console.log('📅 Opening Google Calendar');
             } else if (type === 'apple') {
-                // Use data URI with webcal protocol to trigger native calendar app
-                const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
-                const reader = new FileReader();
+                // Detect iOS/macOS and browser type
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const isMac = /Macintosh/i.test(navigator.userAgent);
+                const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome|CriOS|Edg|OPR/i.test(navigator.userAgent);
+                const isChrome = /CriOS|Chrome/i.test(navigator.userAgent);
+                const isInApp = /FBAN|FBAV|Instagram|Line|Zalo|Messenger/i.test(navigator.userAgent);
 
-                reader.onload = function() {
-                    // Convert to data URI
-                    const dataUri = reader.result;
+                console.log('📱 Device info:', { isIOS, isMac, isSafari, isChrome, isInApp });
 
-                    // Create a temporary link with the data URI
-                    const link = document.createElement('a');
-                    link.href = dataUri;
-                    link.download = `wedding-event-${eventId}.ics`;
-
-                    // Detect iOS/macOS
-                    const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
-
-                    if (isAppleDevice) {
-                        // Try to use webcal protocol first (this should open Calendar app)
-                        // Convert blob to base64 and create webcal link
-                        link.setAttribute('href', dataUri);
-                        link.setAttribute('target', '_blank');
+                if (isIOS) {
+                    // Method 1: For iOS Safari - works best with blob URL
+                    if (isSafari) {
+                        const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `wedding-event-${eventId}.ics`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                        console.log('📅 Opening with blob URL (Safari)');
                     }
+                    // Method 2: For Chrome/in-app browsers on iOS - use data URI
+                    else {
+                        // Create data URI
+                        const base64Content = btoa(unescape(encodeURIComponent(icalContent)));
+                        const dataUri = `data:text/calendar;charset=utf-8;base64,${base64Content}`;
 
+                        // Try to trigger download/open
+                        const link = document.createElement('a');
+                        link.href = dataUri;
+                        link.download = `wedding-event-${eventId}.ics`;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        // Show helpful message for in-app browsers
+                        if (isInApp || isChrome) {
+                            setTimeout(() => {
+                                const helpMsg = document.createElement('div');
+                                helpMsg.style.cssText = `
+                                    position: fixed;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    background: rgba(0, 0, 0, 0.9);
+                                    color: white;
+                                    padding: 2rem;
+                                    border-radius: 15px;
+                                    z-index: 10002;
+                                    max-width: 80%;
+                                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+                                    text-align: center;
+                                    font-family: var(--font-body);
+                                `;
+                                helpMsg.innerHTML = `
+                                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📱</div>
+                                    <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">Hướng dẫn thêm vào lịch</div>
+                                    <div style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; opacity: 0.95;">
+                                        ${isInApp ?
+                                            'Vui lòng mở link này bằng Safari hoặc sử dụng tính năng "Tải file .ics" để tải file về rồi mở bằng ứng dụng Lịch' :
+                                            'File đã được tải xuống. Vui lòng mở file để thêm vào lịch của bạn'}
+                                    </div>
+                                    <button style="
+                                        padding: 0.75rem 1.5rem;
+                                        background: white;
+                                        color: #333;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-size: 1rem;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                        font-family: var(--font-body);
+                                    " onclick="this.parentElement.remove()">Đã hiểu</button>
+                                `;
+                                document.body.appendChild(helpMsg);
+                            }, 500);
+                        }
+
+                        console.log('📅 Opening with data URI (Chrome/In-app)');
+                    }
+                } else if (isMac) {
+                    // macOS - use blob URL
+                    const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `wedding-event-${eventId}.ics`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-
-                    console.log('📅 Opening Apple Calendar');
-                };
-
-                reader.readAsDataURL(blob);
+                    window.URL.revokeObjectURL(url);
+                    console.log('📅 Opening Calendar (macOS)');
+                }
             } else if (type === 'ics') {
                 // Download .ics file
                 const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
