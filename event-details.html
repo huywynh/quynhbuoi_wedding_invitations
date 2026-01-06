@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         /* Event Details Page Specific Styles */
         .event-details-page {
@@ -342,6 +345,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="site-header">
         <div class="container header-inner">
@@ -432,6 +436,11 @@
         </div>
     </footer>
 
+    <audio id="bgMusic" preload="none"></audio>
+    <button id="musicToggle" class="music-toggle">
+        <span class="music-icon">🎵</span>
+    </button>
+    <script src="music.js"></script>
     <script src="script.js"></script>
     <script>
         // Event data
@@ -464,11 +473,11 @@
             'vu-quy': {
                 title: 'Lễ Vu Quy',
                 subtitle: 'Ngày Về Nhà Chồng',
-                image: 'https://via.placeholder.com/900x400/FFB6C1/FFFFFF?text=Lễ+Vu+Quy',
+                image: 'event/DSC_0307.JPG',
                 location: 'Tư gia nhà gái',
                 time: '06:00 - Ngày 17/01/2026',
                 lunar: 'Nhằm ngày 29/11 âm lịch',
-                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                mapUrl: 'https://maps.app.goo.gl/eR8dES7xzNwmRQtZ6',
                 description: `
                     <p>Lễ Vu Quy là một trong những nghi lễ quan trọng và xúc động nhất trong đám cưới truyền thống Việt Nam.
                     Đây là lúc cô dâu chính thức rời bỏ tổ ấm để bắt đầu cuộc sống mới bên gia đình nhà chồng.</p>
@@ -480,11 +489,11 @@
             'thanh-hon': {
                 title: 'Lễ Thành Hôn',
                 subtitle: 'Rước Dâu & Lễ Gia Tiên',
-                image: 'https://via.placeholder.com/900x400/C9A961/FFFFFF?text=Lễ+Thành+Hôn',
+                image: 'event/DSC_0388.JPG',
                 location: 'Tư gia nhà trai',
                 time: '10:00 - Ngày 24/01/2026',
                 lunar: 'Nhằm ngày 06/12 âm lịch',
-                mapUrl: 'https://maps.app.goo.gl/ADh5RekNcqBQPMYu6',
+                mapUrl: 'https://maps.app.goo.gl/FK2oG7ezyU3N83MP6',
                 description: `
                     <p>Lễ Thành Hôn tại nhà trai là nghi lễ chính thức đánh dấu sự kết hợp của hai gia đình.
                     Sau khi rước dâu về, cô dâu chú rể sẽ cùng nhau làm lễ gia tiên, báo cáo với tổ tiên về việc thành hôn.</p>
@@ -497,7 +506,7 @@
             'tiec-cuoi': {
                 title: 'Tiệc Mừng Thành Hôn',
                 subtitle: 'Đãi Tiệc Tại Nhà Hàng',
-                image: 'https://via.placeholder.com/900x400/D4AF37/FFFFFF?text=Tiệc+Cưới',
+                image: 'event/DSC_0541.JPG',
                 location: 'Nhà Hàng Tiệc Cưới Kim Cương - Sảnh Cát Tường',
                 time: '11:00 - Ngày 25/01/2026',
                 lunar: 'Nhằm ngày 07/12 âm lịch',
@@ -532,7 +541,7 @@
             document.getElementById('btnViewMap').href = event.mapUrl;
 
             // Add to calendar button
-            document.getElementById('btnAddToCalendar').addEventListener('click', function() {
+            document.getElementById('btnAddToCalendar').addEventListener('click', function () {
                 addToCalendar(eventId);
             });
 
@@ -670,4 +679,5 @@
     <!-- Falling Hearts Container -->
     <div class="falling-hearts-container" id="fallingHeartsContainer"></div>
 </body>
+
 </html>

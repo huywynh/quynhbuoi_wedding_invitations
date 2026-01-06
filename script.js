@@ -100,155 +100,7 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// Music Player (playlist from /music)
-const music = document.getElementById('bgMusic');
-const musicToggle = document.getElementById('musicToggle');
-let isPlaying = false;
-let playlist = [];
-let currentTrack = 0;
-let playlistInitialized = false;
-
-// Danh sách file nhạc mặc định
-// Bạn có thể thêm file nhạc vào thư mục /music với tên: song1.mp3, song2.mp3, ...
-function getDefaultPlaylist() {
-    const files = [];
-    // Thử các tên file phổ biến
-    for (let i = 1; i <= 5; i++) {
-        files.push(`music/song${i}.mp3`);
-        files.push(`music/track${i}.mp3`);
-        files.push(`music/${i}.mp3`);
-    }
-    return files;
-}
-
-// Load playlist từ manifest.json hoặc dùng danh sách mặc định
-async function loadPlaylist() {
-    try {
-        const res = await fetch('music/manifest.json');
-        if (res.ok) {
-            const list = await res.json();
-            if (Array.isArray(list) && list.length) {
-                playlist = list.map(p => p.startsWith('http') || p.startsWith('/') ? p : `music/${p}`);
-                console.log('✅ Loaded playlist from manifest.json:', playlist.length, 'tracks');
-                return;
-            }
-        }
-    } catch (e) {
-        console.log('ℹ️ No manifest.json found, using default playlist');
-    }
-
-    // Nếu không có manifest, dùng danh sách mặc định
-    playlist = getDefaultPlaylist();
-    console.log('ℹ️ Using default playlist:', playlist.length, 'tracks');
-}
-
-function playTrack(index) {
-    if (!playlist.length) {
-        console.log('⚠️ No playlist available');
-        return;
-    }
-
-    currentTrack = index % playlist.length;
-    const trackUrl = playlist[currentTrack];
-
-    console.log(`🎵 Playing track ${currentTrack + 1}/${playlist.length}: ${trackUrl}`);
-
-    music.src = trackUrl;
-    music.load();
-
-    music.play().then(() => {
-        isPlaying = true;
-        musicToggle.classList.remove('paused');
-        musicToggle.querySelector('.music-icon').textContent = '🎵';
-        console.log('✅ Playback started');
-    }).catch((error) => {
-        console.log('⚠️ Playback failed:', error.message);
-        // Thử track tiếp theo nếu track hiện tại không load được
-        if (currentTrack < playlist.length - 1) {
-            console.log('Trying next track...');
-            setTimeout(() => playTrack(currentTrack + 1), 500);
-        }
-    });
-}
-
-function nextTrack() {
-    if (!playlist.length) return;
-    currentTrack = (currentTrack + 1) % playlist.length;
-    playTrack(currentTrack);
-}
-
-function prevTrack() {
-    if (!playlist.length) return;
-    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-    playTrack(currentTrack);
-}
-
-// Khi track kết thúc, tự động phát track tiếp theo
-music.addEventListener('ended', () => {
-    console.log('Track ended, playing next...');
-    nextTrack();
-});
-
-// Xử lý lỗi khi load track
-music.addEventListener('error', (e) => {
-    console.log('❌ Error loading track:', music.src);
-    // Tự động chuyển sang track tiếp theo
-    setTimeout(() => nextTrack(), 500);
-});
-
-// Khởi tạo và phát nhạc khi người dùng tương tác lần đầu
-let musicInitialized = false;
-
-async function initMusic() {
-    if (musicInitialized) return;
-    musicInitialized = true;
-
-    console.log('🎵 Initializing music player...');
-    await loadPlaylist();
-
-    if (playlist.length > 0) {
-        playTrack(0);
-    } else {
-        console.log('⚠️ No music files found. Please add music files to /music folder');
-    }
-}
-
-// Tự động phát nhạc khi người dùng click vào bất kỳ đâu trên trang
-document.addEventListener('click', initMusic, { once: true });
-
-// Hoặc khi scroll
-document.addEventListener('scroll', initMusic, { once: true });
-
-// Hoặc khi di chuyển chuột
-document.addEventListener('mousemove', initMusic, { once: true });
-
-// Toggle play/pause button
-musicToggle.addEventListener('click', async function (e) {
-    e.stopPropagation(); // Ngăn trigger init music event
-
-    // Nếu chưa khởi tạo, khởi tạo trước
-    if (!musicInitialized) {
-        await initMusic();
-        return;
-    }
-
-    if (isPlaying) {
-        music.pause();
-        musicToggle.classList.add('paused');
-        musicToggle.querySelector('.music-icon').textContent = '🔇';
-        isPlaying = false;
-        console.log('⏸️ Music paused');
-    } else {
-        music.play().then(() => {
-            musicToggle.classList.remove('paused');
-            musicToggle.querySelector('.music-icon').textContent = '🎵';
-            isPlaying = true;
-            console.log('▶️ Music resumed');
-        }).catch(() => {
-            console.log('⚠️ Play prevented');
-        });
-    }
-});
+// Music Player Logic moved to music.js
 
 // Scroll animations
 const observerOptions = {
@@ -319,7 +171,11 @@ rsvpForm.addEventListener('submit', function (e) {
         .then(() => {
             // Show success message
             formMessage.className = 'form-message success';
-            formMessage.textContent = '✅ Cảm ơn bạn đã xác nhận! Chúng tôi rất mong được gặp bạn trong ngày trọng đại.';
+            if (formData.attendance === 'no') {
+                formMessage.textContent = '✅ Cảm ơn đã xác nhận! Rất tiếc vì bạn không thể tham dự, mong sớm có dịp gặp lại ❤️';
+            } else {
+                formMessage.textContent = '✅ Cảm ơn bạn đã xác nhận! Chúng tôi rất mong được gặp bạn trong ngày trọng đại.';
+            }
 
             // Reset form
             rsvpForm.reset();
@@ -600,22 +456,6 @@ function showCalendarModal(googleUrl, icalContent, eventId) {
                 <span style="font-size: 1.5rem;">🍎</span>
                 <span style="flex: 1; text-align: left;">Apple Calendar</span>
             </button>
-            <button class="calendar-option" data-type="outlook" style="
-                padding: 1rem;
-                border: 2px solid var(--primary-color);
-                background: white;
-                border-radius: 10px;
-                cursor: pointer;
-                font-size: 1rem;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                font-family: var(--font-body);
-            ">
-                <span style="font-size: 1.5rem;">📧</span>
-                <span style="flex: 1; text-align: left;">Outlook / Office 365</span>
-            </button>
             <button class="calendar-option" data-type="ics" style="
                 padding: 1rem;
                 border: 2px solid var(--primary-color);
@@ -682,10 +522,57 @@ function showCalendarModal(googleUrl, icalContent, eventId) {
             const type = this.getAttribute('data-type');
 
             if (type === 'google') {
-                // Open Google Calendar
-                window.open(googleUrl, '_blank');
+                // Detect mobile devices
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isAndroid = /Android/i.test(navigator.userAgent);
+
+                if (isMobile) {
+                    // Try to open in Google Calendar app on mobile
+                    // First attempt: Try opening in the app
+                    window.location.href = googleUrl;
+
+                    // Fallback: If app doesn't open after 2 seconds, open in browser
+                    setTimeout(() => {
+                        window.open(googleUrl, '_blank');
+                    }, 2000);
+                } else {
+                    // Desktop: Open in new tab
+                    window.open(googleUrl, '_blank');
+                }
                 console.log('📅 Opening Google Calendar');
-            } else if (type === 'apple' || type === 'outlook' || type === 'ics') {
+            } else if (type === 'apple') {
+                // Use data URI with webcal protocol to trigger native calendar app
+                const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+                const reader = new FileReader();
+
+                reader.onload = function() {
+                    // Convert to data URI
+                    const dataUri = reader.result;
+
+                    // Create a temporary link with the data URI
+                    const link = document.createElement('a');
+                    link.href = dataUri;
+                    link.download = `wedding-event-${eventId}.ics`;
+
+                    // Detect iOS/macOS
+                    const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+
+                    if (isAppleDevice) {
+                        // Try to use webcal protocol first (this should open Calendar app)
+                        // Convert blob to base64 and create webcal link
+                        link.setAttribute('href', dataUri);
+                        link.setAttribute('target', '_blank');
+                    }
+
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    console.log('📅 Opening Apple Calendar');
+                };
+
+                reader.readAsDataURL(blob);
+            } else if (type === 'ics') {
                 // Download .ics file
                 const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
                 const link = document.createElement('a');
@@ -745,3 +632,236 @@ function showCalendarModal(googleUrl, icalContent, eventId) {
 
 console.log('🎉 Wedding invitation loaded successfully!');
 console.log('💝 Made with love for Quỳnh & Hoa Bưởi');
+
+// RSVP Notifications System
+(function initRSVPNotifications() {
+    const notificationsContainer = document.getElementById('rsvpNotifications');
+    if (!notificationsContainer) return;
+
+    let allRSVPs = [];
+    let currentIndex = 0;
+    let displayedNotifications = [];
+    const MOBILE_BREAKPOINT = 768;
+
+    // Get max visible items based on screen size
+    function getMaxVisibleItems() {
+        return window.innerWidth < MOBILE_BREAKPOINT ? 3 : 5;
+    }
+
+    // Fetch RSVP data from Google Sheets
+    async function fetchRSVPs() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const data = await response.json();
+
+            if (data.success && data.data && data.data.length > 0) {
+                allRSVPs = data.data;
+                console.log(`✅ Loaded ${allRSVPs.length} RSVPs from Google Sheets`);
+                startNotificationCycle();
+            } else {
+                console.log('ℹ️ No RSVPs found yet');
+            }
+        } catch (error) {
+            console.log('ℹ️ Could not fetch RSVPs:', error.message);
+        }
+    }
+
+    // Create notification element
+    function createNotification(rsvp) {
+        const notification = document.createElement('div');
+        notification.className = 'rsvp-notification-item';
+
+        // Escape HTML to prevent XSS
+        const escapedName = rsvp.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const escapedMessage = rsvp.message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        notification.innerHTML = `
+            <div class="notification-name">${escapedName}</div>
+            <div class="notification-message">${escapedMessage}</div>
+        `;
+
+        return notification;
+    }
+
+    // Show next notification
+    function showNextNotification() {
+        if (allRSVPs.length === 0) return;
+
+        const maxVisible = getMaxVisibleItems();
+
+        // Remove oldest notification if we're at max capacity
+        if (displayedNotifications.length >= maxVisible) {
+            const oldest = displayedNotifications.shift();
+            oldest.classList.add('fade-out');
+            setTimeout(() => {
+                if (oldest.parentNode) {
+                    oldest.remove();
+                }
+            }, 800); // Increased from 500ms to 800ms for smoother fade-out
+        }
+
+        // Get next RSVP (loop back to start if at end)
+        const rsvp = allRSVPs[currentIndex];
+        currentIndex = (currentIndex + 1) % allRSVPs.length;
+
+        // Create and add new notification
+        const notification = createNotification(rsvp);
+        notificationsContainer.appendChild(notification);
+        displayedNotifications.push(notification);
+    }
+
+    // Start the notification cycle
+    function startNotificationCycle() {
+        if (allRSVPs.length === 0) return;
+
+        const maxVisible = getMaxVisibleItems();
+
+        // Show initial batch with staggered animation (slower, smoother)
+        for (let i = 0; i < Math.min(maxVisible, allRSVPs.length); i++) {
+            setTimeout(() => showNextNotification(), i * 1200);
+        }
+
+        // Only start cycling if we have more than 3 items
+        if (allRSVPs.length > 3) {
+            // Continue cycling every 12 seconds (much slower for smoother, calmer experience)
+            setInterval(() => {
+                showNextNotification();
+            }, 12000);
+        }
+        // If <= 3 items, just display them statically without cycling
+    }
+
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const maxVisible = getMaxVisibleItems();
+
+            // Remove excess notifications if screen got smaller
+            while (displayedNotifications.length > maxVisible) {
+                const oldest = displayedNotifications.shift();
+                oldest.classList.add('fade-out');
+                setTimeout(() => {
+                    if (oldest.parentNode) {
+                        oldest.remove();
+                    }
+                }, 500);
+            }
+
+            // Add more notifications if screen got bigger and we have items to show
+            while (displayedNotifications.length < maxVisible && allRSVPs.length > 0 && displayedNotifications.length < allRSVPs.length) {
+                showNextNotification();
+            }
+        }, 300);
+    });
+
+    // Initialize - fetch RSVPs after a short delay
+    setTimeout(fetchRSVPs, 2000);
+
+    // Refresh RSVPs every 30 seconds to get new submissions
+    setInterval(fetchRSVPs, 30000);
+
+    // Hide notifications when scrolling to RSVP section
+    const rsvpSection = document.getElementById('rsvp');
+    if (rsvpSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // User scrolled to RSVP section - hide notifications
+                    notificationsContainer.style.opacity = '0';
+                    notificationsContainer.style.pointerEvents = 'none';
+                } else {
+                    // User scrolled away - show notifications again
+                    notificationsContainer.style.opacity = '1';
+                    notificationsContainer.style.pointerEvents = 'auto';
+                }
+            });
+        }, {
+            threshold: 0.2 // Trigger when 20% of RSVP section is visible
+        });
+
+        observer.observe(rsvpSection);
+    }
+
+    // Expose fetchRSVPs for guestbook to use
+    window.fetchRSVPsForGuestbook = fetchRSVPs;
+    window.getAllRSVPs = () => allRSVPs;
+})();
+
+// Guestbook System
+(function initGuestbook() {
+    const guestbookList = document.getElementById('guestbookList');
+    if (!guestbookList) return;
+
+    // Load guestbook data
+    async function loadGuestbook() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const data = await response.json();
+
+            if (data.success && data.data && data.data.length > 0) {
+                displayGuestbook(data.data);
+                console.log(`✅ Loaded ${data.data.length} guestbook entries`);
+            } else {
+                guestbookList.innerHTML = '<div class="guestbook-loading"><span>Chưa có lời chúc nào</span></div>';
+            }
+        } catch (error) {
+            console.log('ℹ️ Could not fetch guestbook:', error.message);
+            guestbookList.innerHTML = '<div class="guestbook-loading"><span>Không thể tải dữ liệu</span></div>';
+        }
+    }
+
+    // Display guestbook entries
+    function displayGuestbook(entries) {
+        if (entries.length === 0) {
+            guestbookList.innerHTML = '<div class="guestbook-loading"><span>Chưa có lời chúc nào</span></div>';
+            return;
+        }
+
+        // Sort by timestamp (newest first)
+        const sortedEntries = [...entries].reverse();
+
+        const html = sortedEntries.map(entry => {
+            const escapedName = entry.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const escapedMessage = entry.message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            // Format timestamp if available
+            let timeHtml = '';
+            if (entry.timestamp) {
+                const date = new Date(entry.timestamp);
+                const formattedDate = date.toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                timeHtml = `<div class="guestbook-item-time">${formattedDate}</div>`;
+            }
+
+            return `
+                <div class="guestbook-item">
+                    <div class="guestbook-item-name">${escapedName}</div>
+                    <div class="guestbook-item-message">"${escapedMessage}"</div>
+                    ${timeHtml}
+                </div>
+            `;
+        }).join('');
+
+        guestbookList.innerHTML = html;
+    }
+
+    // Refresh guestbook when form is submitted
+    const rsvpForm = document.getElementById('rsvpForm');
+    if (rsvpForm) {
+        rsvpForm.addEventListener('submit', () => {
+            // Reload guestbook after a short delay to allow form submission
+            setTimeout(loadGuestbook, 2000);
+        });
+    }
+
+    // Initial load
+    setTimeout(loadGuestbook, 2000);
+
+    // Refresh every 30 seconds
+    setInterval(loadGuestbook, 30000);
+})();
