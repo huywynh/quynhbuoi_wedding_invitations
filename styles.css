@@ -5,7 +5,7 @@
 }
 
 :root {
-    --primary-color: #D4AF37;
+    --primary-color: #B8860B;
     --secondary-color: #C9A961;
     --accent-color: #FFB6C1;
     --dark-color: #2C3E50;
@@ -14,6 +14,19 @@
     --font-primary: 'Playfair Display', serif;
     --font-secondary: 'Lora', serif;
     --font-script: 'Great Vibes', cursive;
+}
+
+/* Accessibility: Visually hidden class for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 body {
@@ -277,10 +290,13 @@ body {
 }
 
 @keyframes pulse-button {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
         box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
     }
+
     50% {
         transform: scale(1.15);
         box-shadow: 0 6px 25px rgba(212, 175, 55, 0.8);
@@ -295,6 +311,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    min-height: 600px;
 }
 
 .hero::before {
@@ -329,10 +346,16 @@ body {
 }
 
 .hero-content {
-    position: relative;
+    position: absolute;
+    top: 66.67%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 10;
     text-align: center;
     color: var(--white);
+    width: 100%;
+    padding: 0 20px;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 /* Slider styles */
@@ -425,14 +448,15 @@ body {
     font-family: var(--font-script);
     font-size: 5rem;
     margin: 20px 0;
-    line-height: 1.2;
+    line-height: 1.3;
     opacity: 0;
     animation: fadeInUp 1s ease 0.3s forwards;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 18px;
-    white-space: nowrap;
+    flex-wrap: wrap;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .groom-name,
@@ -1411,7 +1435,18 @@ section {
 /* Mobile & Tablet Portrait (max-width: 768px) */
 @media (max-width: 768px) {
     .couple-names {
-        font-size: 3.5rem;
+        font-size: 3rem;
+        gap: 12px;
+        margin: 15px 0;
+    }
+
+    .ampersand {
+        font-size: 2.2rem;
+    }
+
+    .wedding-date {
+        font-size: 1.4rem;
+        letter-spacing: 3px;
     }
 
     .section-title {
@@ -1494,16 +1529,34 @@ section {
 
 /* Mobile Phone (max-width: 480px) */
 @media (max-width: 480px) {
+    .hero {
+        min-height: 500px;
+    }
+
+    .hero-content {
+        padding: 0 15px;
+    }
+
     .couple-names {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        gap: 10px;
+        margin: 12px 0;
+        line-height: 1.4;
+    }
+
+    .groom-name,
+    .bride-name {
+        font-size: 2.2rem;
     }
 
     .ampersand {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 
     .wedding-date {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        margin-top: 20px;
     }
 
     .couple-section {
@@ -1651,7 +1704,45 @@ section {
     gap: 14px;
     max-width: 380px;
     pointer-events: none;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Hidden state for notifications */
+.rsvp-notifications.hidden {
+    transform: translateX(calc(100% + 40px));
+    opacity: 0;
+}
+
+/* Toggle notifications button */
+.toggle-notifications-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 110px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    padding: 10px 18px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.toggle-notifications-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.toggle-text {
+    white-space: nowrap;
 }
 
 /* Glassmorphism notification card */
@@ -1805,30 +1896,16 @@ section {
     .rsvp-notifications {
         top: 70px;
         right: 12px;
-        max-width: 300px;
+        max-width: 200px;
         gap: 10px;
     }
 
-    .rsvp-notification-item {
-        padding: 11px 13px;
-        border-radius: 10px;
-    }
-
-    .notification-name {
-        font-size: 0.9rem;
-    }
-
-    .notification-message {
-        font-size: 0.82rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .rsvp-notifications {
-        top: 65px;
-        right: 10px;
-        max-width: 280px;
-        gap: 8px;
+    .toggle-notifications-btn {
+        bottom: 20px;
+        right: 85px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+        border-radius: 18px;
     }
 
     .rsvp-notification-item {
@@ -1837,10 +1914,119 @@ section {
     }
 
     .notification-name {
-        font-size: 0.88rem;
+        font-size: 0.85rem;
     }
 
     .notification-message {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .rsvp-notifications {
+        top: 65px;
+        right: 10px;
+        max-width: 180px;
+        gap: 8px;
+    }
+
+    .toggle-notifications-btn {
+        bottom: 20px;
+        right: 75px;
+        padding: 7px 12px;
+        font-size: 0.75rem;
+        border-radius: 16px;
+    }
+
+    .rsvp-notification-item {
+        padding: 9px 11px;
+        border-radius: 10px;
+    }
+
+    .notification-name {
         font-size: 0.8rem;
+    }
+
+    .notification-message {
+        font-size: 0.72rem;
+        line-height: 1.4;
+    }
+}
+
+/* ============================================
+   LAZY LOADING STYLES
+   ============================================ */
+
+/* Placeholder cho hình đang load */
+img[data-src] {
+    background: linear-gradient(90deg,
+            #f0f0f0 0%,
+            #e0e0e0 20%,
+            #f0f0f0 40%,
+            #f0f0f0 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Fade in khi hình đã load xong */
+img.loaded {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Error state */
+img.error {
+    background: #ffebee;
+    position: relative;
+}
+
+img.error::after {
+    content: '⚠️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+}
+
+/* Loading spinner cho lightbox */
+.lightbox.loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    z-index: 10001;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }

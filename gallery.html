@@ -11,6 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&display=swap"
         rel="stylesheet">
+    <!-- Lazy Loading Script -->
+    <script src="lazy-load.js"></script>
     <style>
         .gallery-page {
             padding: 100px 0 60px;
@@ -59,6 +61,10 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-full-item img.rotated {
+            object-fit: contain;
         }
 
         .gallery-full-item:hover img {
@@ -212,52 +218,68 @@
 
             <div class="gallery-full-grid" id="galleryFullGrid">
                 <div class="gallery-full-item" data-index="0">
-                    <img src="gallery/DSC_0195.JPG" alt="Wedding Photo 1">
+                    <img src="gallery/thumbs/DSC_0195.jpg" data-original="gallery/DSC_0195.JPG" alt="Wedding Photo 1"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="1">
-                    <img src="gallery/DSC_0208.JPG" alt="Wedding Photo 2">
+                    <img src="gallery/thumbs/DSC_0208.jpg" data-original="gallery/DSC_0208.JPG" alt="Wedding Photo 2"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="2">
-                    <img src="gallery/DSC_0218.JPG" alt="Wedding Photo 3">
+                    <img src="gallery/thumbs/DSC_0218.jpg" data-original="gallery/DSC_0218.JPG" alt="Wedding Photo 3"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="3">
-                    <img src="gallery/DSC_0252.JPG" alt="Wedding Photo 4">
+                    <img src="gallery/thumbs/DSC_0252.jpg" data-original="gallery/DSC_0252.JPG" alt="Wedding Photo 4"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="4">
-                    <img src="gallery/DSC_0284.JPG" alt="Wedding Photo 5">
+                    <img src="gallery/thumbs/DSC_0284.jpg" data-original="gallery/DSC_0284.JPG" alt="Wedding Photo 5"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="5">
-                    <img src="gallery/DSC_0285.JPG" alt="Wedding Photo 6">
+                    <img src="gallery/thumbs/DSC_0285.jpg" data-original="gallery/DSC_0285.JPG" alt="Wedding Photo 6"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="6">
-                    <img src="gallery/DSC_0324.JPG" alt="Wedding Photo 7">
+                    <img src="gallery/thumbs/DSC_0324.jpg" data-original="gallery/DSC_0324.JPG" alt="Wedding Photo 7"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="7">
-                    <img src="gallery/DSC_0368.JPG" alt="Wedding Photo 8">
+                    <img src="gallery/thumbs/DSC_0368.jpg" data-original="gallery/DSC_0368.JPG" alt="Wedding Photo 8"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="8">
-                    <img src="gallery/DSC_0388.JPG" alt="Wedding Photo 9">
+                    <img src="gallery/thumbs/DSC_0388.jpg" data-original="gallery/DSC_0388.JPG" alt="Wedding Photo 9"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="9">
-                    <img src="gallery/DSC_0436.JPG" alt="Wedding Photo 10">
+                    <img src="gallery/thumbs/DSC_0436.jpg" data-original="gallery/DSC_0436.JPG" alt="Wedding Photo 10"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="10">
-                    <img src="gallery/DSC_0448.JPG" alt="Wedding Photo 11">
+                    <img src="gallery/thumbs/DSC_0448.jpg" data-original="gallery/DSC_0448.JPG" alt="Wedding Photo 11"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="11">
-                    <img src="gallery/DSC_0467.JPG" alt="Wedding Photo 12">
+                    <img src="gallery/thumbs/DSC_0467.jpg" data-original="gallery/DSC_0467.JPG" alt="Wedding Photo 12"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="12">
-                    <img src="gallery/DSC_0478.JPG" alt="Wedding Photo 13">
+                    <img src="gallery/thumbs/DSC_0478.jpg" data-original="gallery/DSC_0478.JPG" alt="Wedding Photo 13"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="13">
-                    <img src="gallery/DSC_0487.JPG" alt="Wedding Photo 14">
+                    <img src="gallery/thumbs/DSC_0487.jpg" data-original="gallery/DSC_0487.JPG" alt="Wedding Photo 14"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="14">
-                    <img src="gallery/DSC_0514.JPG" alt="Wedding Photo 15">
+                    <img src="gallery/thumbs/DSC_0514.jpg" data-original="gallery/DSC_0514.JPG" alt="Wedding Photo 15"
+                        loading="lazy">
                 </div>
                 <div class="gallery-full-item" data-index="15">
-                    <img src="gallery/DSC_0541.JPG" alt="Wedding Photo 16">
+                    <img src="gallery/thumbs/DSC_0541.jpg" data-original="gallery/DSC_0541.JPG" alt="Wedding Photo 16"
+                        loading="lazy">
                 </div>
             </div>
         </div>
@@ -292,17 +314,28 @@
             'gallery/DSC_0541.JPG'
         ];
 
-        // Open lightbox
+        // Open lightbox with original image
         document.querySelectorAll('.gallery-full-item').forEach((item, index) => {
             item.addEventListener('click', () => {
                 currentImageIndex = index;
-                openLightbox(images[index]);
+                const img = item.querySelector('img');
+                const originalSrc = img.getAttribute('data-original') || images[index];
+                openLightbox(originalSrc);
             });
         });
 
         function openLightbox(src) {
-            document.getElementById('lightbox').classList.add('active');
-            document.getElementById('lightboxImg').src = src;
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('active', 'loading');
+
+            // Preload original image
+            const img = new Image();
+            img.onload = () => {
+                document.getElementById('lightboxImg').src = src;
+                lightbox.classList.remove('loading');
+            };
+            img.src = src;
+
             document.body.style.overflow = 'hidden';
         }
 
@@ -392,8 +425,47 @@
         }
 
         window.addEventListener('load', () => {
+            // Fix image orientation
+            fixImageOrientation();
             setTimeout(startFallingHearts, 1000);
         });
+
+        // Function to fix image orientation based on EXIF data
+        function fixImageOrientation() {
+            const images = document.querySelectorAll('.gallery-full-item img');
+            images.forEach(img => {
+                // Wait for image to load to check its natural dimensions
+                if (img.complete) {
+                    checkAndRotate(img);
+                } else {
+                    img.addEventListener('load', () => checkAndRotate(img));
+                }
+            });
+        }
+
+        function checkAndRotate(img) {
+            // Check if image has landscape dimensions (width > height)
+            // These images have EXIF orientation flag indicating they should be rotated
+            const isLandscapeFile = img.naturalWidth > img.naturalHeight;
+
+            if (isLandscapeFile) {
+                // Use canvas to rotate the image properly
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Set canvas dimensions to rotated size (swap width and height)
+                canvas.width = img.naturalHeight;
+                canvas.height = img.naturalWidth;
+
+                // Rotate the canvas and draw the image
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(90 * Math.PI / 180);
+                ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+                // Replace the image source with the rotated version
+                img.src = canvas.toDataURL('image/jpeg', 0.95);
+            }
+        }
     </script>
 
     <!-- Falling Hearts Container -->

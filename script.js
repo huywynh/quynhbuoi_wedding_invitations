@@ -238,13 +238,21 @@ galleryItems.forEach(img => {
     });
 });
 
-// Parallax effect for hero
+// Parallax effect for hero with slide down animation
 window.addEventListener('scroll', function () {
     const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero-content');
-    if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-        hero.style.opacity = 1 - (scrolled / 700);
+    const heroContent = document.querySelector('.hero-content');
+
+    if (heroContent) {
+        // Calculate opacity fade (fade out as user scrolls)
+        const opacity = Math.max(0, 1 - (scrolled / 500));
+
+        // Calculate slide down distance (move down as user scrolls)
+        const slideDistance = scrolled * 0.4;
+
+        // Apply transforms - maintain position at 2/3 while sliding down
+        heroContent.style.transform = `translate(-50%, calc(-50% + ${slideDistance}px))`;
+        heroContent.style.opacity = opacity;
     }
 });
 
@@ -709,6 +717,23 @@ console.log('💝 Made with love for Quỳnh & Hoa Bưởi');
     let currentIndex = 0;
     let displayedNotifications = [];
     const MOBILE_BREAKPOINT = 768;
+    let isManuallyHidden = false; // Track if user manually hid notifications
+
+    // Toggle notifications visibility
+    const toggleBtn = document.getElementById('toggleNotifications');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            isManuallyHidden = !isManuallyHidden;
+
+            if (isManuallyHidden) {
+                notificationsContainer.classList.add('hidden');
+                toggleBtn.querySelector('.toggle-text').textContent = 'Hiện lời chúc';
+            } else {
+                notificationsContainer.classList.remove('hidden');
+                toggleBtn.querySelector('.toggle-text').textContent = 'Ẩn lời chúc';
+            }
+        });
+    }
 
     // Get max visible items based on screen size
     function getMaxVisibleItems() {
@@ -829,19 +854,22 @@ console.log('💝 Made with love for Quỳnh & Hoa Bưởi');
     // Refresh RSVPs every 30 seconds to get new submissions
     setInterval(fetchRSVPs, 30000);
 
-    // Hide notifications when scrolling to RSVP section
+    // Hide notifications when scrolling to RSVP section (only if not manually controlled)
     const rsvpSection = document.getElementById('rsvp');
     if (rsvpSection) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // User scrolled to RSVP section - hide notifications
-                    notificationsContainer.style.opacity = '0';
-                    notificationsContainer.style.pointerEvents = 'none';
-                } else {
-                    // User scrolled away - show notifications again
-                    notificationsContainer.style.opacity = '1';
-                    notificationsContainer.style.pointerEvents = 'auto';
+                // Only auto-hide if user hasn't manually hidden/shown notifications
+                if (!isManuallyHidden) {
+                    if (entry.isIntersecting) {
+                        // User scrolled to RSVP section - hide notifications
+                        notificationsContainer.style.opacity = '0';
+                        notificationsContainer.style.pointerEvents = 'none';
+                    } else {
+                        // User scrolled away - show notifications again
+                        notificationsContainer.style.opacity = '1';
+                        notificationsContainer.style.pointerEvents = 'auto';
+                    }
                 }
             });
         }, {
